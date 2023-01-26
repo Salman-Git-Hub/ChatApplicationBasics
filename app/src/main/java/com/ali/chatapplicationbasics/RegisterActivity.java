@@ -195,7 +195,7 @@ public class RegisterActivity extends AppCompatActivity {
                                 DatabaseReference userRef = databaseReference.child("users").child(user.getUid());
                                 userRef.child("email").setValue(user.getEmail());
                                 userRef.child("name").setValue(user.getDisplayName());
-                                userRef.child("g_list").setValue("");
+
                                 userRef.child("f_list").setValue(new ArrayList<>());
                                 new Thread(() -> setPassword()).start();
                                 new Thread(() -> uploadFromUri(mAuth.getCurrentUser().getPhotoUrl().toString()))
@@ -328,7 +328,7 @@ public class RegisterActivity extends AppCompatActivity {
                             DatabaseReference userRef = databaseReference.child("users").child(user.getUid());
                             userRef.child("email").setValue(user.getEmail());
                             userRef.child("name").setValue(user.getDisplayName());
-                            userRef.child("g_list").setValue("");
+
                             userRef.child("f_list").setValue(new ArrayList<>());
                             runOnUiThread(new Runnable() {
                                 @Override
