@@ -46,6 +46,7 @@ public class ChatActivity extends AppCompatActivity {
     private List<ChatList> chatLists = new ArrayList<>();
 
     private int unseen = 0;
+    private boolean background = false;
 
     private RecyclerView chatRecyclerView;
     private ChatAdapter chatAdapter;
@@ -120,6 +121,30 @@ public class ChatActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public void onBackPressed() {
+        background = true;
+        super.onBackPressed();
+    }
+
+    @Override
+    protected void onPause() {
+        background = true;
+        super.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        background = false;
+        super.onResume();
+    }
+
+    @Override
+    protected void onRestart() {
+        background = false;
+        super.onRestart();
+    }
+
     private void messageListener(String groupId) {
         databaseReference.child("chat_groups")
                 .child(groupId)
@@ -144,10 +169,12 @@ public class ChatActivity extends AppCompatActivity {
                             if (! seenUser.contains(user.getUid())) {
                                 seenUser.add(user.getUid());
                             }
-                            chatRef.child("messages")
-                                    .child(e.getMessageId())
-                                    .child("seenList")
-                                    .setValue(seenUser);
+                            if (! background) {
+                                chatRef.child("messages")
+                                        .child(e.getMessageId())
+                                        .child("seenList")
+                                        .setValue(seenUser);
+                            }
 
                             String timeStamp = e.getMessageId();
                             String msg = e.getMessage();
