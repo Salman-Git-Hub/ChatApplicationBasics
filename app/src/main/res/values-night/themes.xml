@@ -1,0 +1,42 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Theme.ChatApplicationBasics" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">@color/theme_color</item>
+        <item name="colorPrimaryVariant">@color/theme_color_8</item>
+        <item name="colorOnPrimary">@color/black</item>
+        <!-- Secondary brand color. -->
+        <item name="colorSecondary">@color/teal_200</item>
+        <item name="colorSecondaryVariant">@color/teal_200</item>
+        <item name="colorOnSecondary">@color/black</item>
+        <!-- Status bar color. -->
+        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
+        <!-- Customize your theme here. -->
+        <item name="theme_color">@color/white</item>
+        <item name="main_text">@color/white</item>
+        <item name="default_pfp">@drawable/dark_user</item>
+        <item name="border_color">@color/main_background_color_dark</item>
+        <item name="round_back_10">@drawable/round_back_dark_10</item>
+        <item name="main_background">@color/main_background_color_dark</item>
+        <item name="search_icon">@drawable/search_icon_dark</item>
+
+        <item name="settings_account">@drawable/dark_account</item>
+
+        <item name="account_pass">@drawable/dark_key</item>
+        <item name="account_provider">@drawable/dark_provider</item>
+        <item name="account_profile">@drawable/dark_profile</item>
+        <item name="account_log">@drawable/dark_log</item>
+
+        <item name="pref_theme">@drawable/dark_theme</item>
+        <item name="pref_notif">@drawable/dark_notif</item>
+
+        <item name="app_cache">@drawable/dark_cache</item>
+        <item name="app_perst">@drawable/dark_persistence</item>
+
+    </style>
+
+<!--    <style name="ThemeOverlay.ChatApplicationBasics.FullscreenContainer" parent="">-->
+<!--        <item name="fullscreenBackgroundColor">@color/light_blue_900</item>-->
+<!--        <item name="fullscreenTextColor">@color/light_blue_A400</item>-->
+<!--    </style>-->
+</resources>

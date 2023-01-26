@@ -1,0 +1,62 @@
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
+    <PreferenceCategory
+        app:title="Preferences"
+        app:allowDividerBelow="true">
+
+        <DropDownPreference
+            app:title="Theme"
+            app:positiveButtonText="@string/prompt_password"
+            app:key="pref_theme"
+            app:defaultValue="-1"
+            app:summary="%s"
+            app:entries="@array/theme_entries"
+            app:entryValues="@array/theme_values"
+            app:icon="?attr/pref_theme"/>
+
+        <SwitchPreference
+            app:title="Notifications"
+            app:defaultValue="true"
+            app:key="pref_notif"
+            app:icon="?attr/pref_notif"/>
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        app:title="App"
+        app:key="app_prefs"
+        app:allowDividerBelow="true">
+
+        <EditTextPreference
+            app:key="cache_size"
+            app:dialogMessage="Not less than 1 or greater than 100"
+            app:defaultValue="20"
+            app:icon="?attr/app_cache"
+            app:summary="Cache size allocated"
+            app:title="Cache Size"/>
+
+        <SwitchPreference
+            app:key="app_persistence"
+            app:defaultValue="true"
+            app:icon="?attr/app_perst"
+            app:title="Persistence"
+            app:summary="Offline capabilities"/>
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        app:title="Personal"
+        app:allowDividerBelow="true">
+        <Preference
+            app:key="accoutn_frag"
+            app:allowDividerBelow="true"
+            app:fragment="com.ali.chatapplicationbasics.settings.AccountFragment"
+            app:icon="?attr/settings_account"
+            app:summary="Change password, Profile picture, etc."
+            app:title="Account" />
+    </PreferenceCategory>
+
+
+
+</PreferenceScreen>

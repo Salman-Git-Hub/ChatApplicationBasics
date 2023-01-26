@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="top"
+    android:background="@color/theme_color_8"
+    tools:context=".ExtraActivity">
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/extra_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="20dp"/>
+
+    <com.google.android.material.progressindicator.LinearProgressIndicator
+        android:id="@+id/extra_progress_line"
+        android:layout_width="match_parent"
+        app:indicatorColor="@color/theme_color"
+        android:layout_height="20dp"
+        android:visibility="invisible" />
+
+    <TextView
+        android:layout_marginTop="30dp"
+        android:id="@+id/extra_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="start"
+        android:layout_marginStart="20sp"
+        android:text="None"
+        android:textAllCaps="false"
+        android:textColor="?attr/main_text"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:id="@+id/extra_placeholder"
+        app:boxBackgroundMode="outline">
+
+        <EditText
+            android:id="@+id/extra_field"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginStart="20sp"
+            android:layout_marginEnd="20dp"
+            android:autofillHints="emailAddress"
+            android:background="?attr/round_back_10"
+            android:inputType="textEmailAddress"
+            android:maxLines="1"
+            android:paddingStart="20dp"
+            android:paddingTop="9dp"
+            android:paddingEnd="0dp"
+            android:textSize="16sp" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/confirm_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="40dp"
+        android:layout_marginEnd="20dp"
+        android:background="@drawable/round_back_theme_1000"
+        android:text="Confirm"
+        android:textColor="#FFFFFF"
+        android:textStyle="bold" />
+
+
+</LinearLayout>

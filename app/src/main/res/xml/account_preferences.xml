@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <Preference
+        android:key="change_password"
+        android:title="Change password"
+        android:icon="?attr/account_pass"
+        android:summary="Change account password"/>
+
+    <Preference
+        android:key="change_profile"
+        android:title="Change profile picture"
+        android:icon="?attr/account_profile"/>
+
+    <Preference
+        android:key="change_provider"
+        android:title="Account providers"
+        android:summary="Add or remove account providers"
+        android:icon="?attr/account_provider"/>
+
+    <Preference
+        android:key="log_out"
+        android:title="Log out"
+        android:icon="?attr/account_log"/>
+
+    <Preference
+        android:key="account_delete"
+        android:title="Delete account"
+        android:icon="@drawable/delete"/>
+
+</PreferenceScreen>

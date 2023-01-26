@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:clickable="true"
+    android:longClickable="true"
+    android:background="?android:attr/selectableItemBackground">
+
+    <LinearLayout
+        android:layout_marginBottom="2dp"
+        android:id="@+id/root_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/profilePic"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="?attr/default_pfp"
+                android:layout_centerVertical="true"
+                android:layout_marginTop="40dp"
+                android:layout_marginStart="20dp"/>
+
+            <LinearLayout
+                android:layout_toStartOf="@+id/unseen_messages"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:layout_marginEnd="10dp"
+                android:layout_marginStart="20dp"
+                android:layout_centerVertical="true"
+                android:layout_toEndOf="@+id/profilePic">
+
+                <TextView
+                    android:id="@+id/name"
+                    android:layout_marginTop="10dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:maxLines="1"
+                    android:textSize="18sp"
+                    android:text="Full Name"
+                    android:textStyle="normal"/>
+
+                <TextView
+                    android:id="@+id/last_message"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textStyle="bold"
+                    android:maxLines="1"
+                    android:layout_marginTop="5dp"
+                    android:textColor="@color/theme_color_80"
+                    android:textSize="14sp"
+                    android:text="Last Message"/>
+
+            </LinearLayout>
+
+            <TextView
+                android:visibility="visible"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:text="0"
+                android:layout_centerVertical="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="20dp"
+                android:textSize="12sp"
+                android:textColor="#FFFFFF"
+                android:gravity="center"
+                android:background="@drawable/round_back_theme_1000"
+                android:id="@+id/unseen_messages"/>
+
+        </RelativeLayout>
+
+    </LinearLayout>
+</RelativeLayout>

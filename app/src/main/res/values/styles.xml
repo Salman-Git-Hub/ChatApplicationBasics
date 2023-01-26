@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <attr name="theme_color" format="reference"/>
+    <attr name="default_pfp" format="reference" />
+    <attr name="main_text" format="reference" />
+    <attr name="sec_text" format="reference"/>
+    <attr name="round_back_10" format="reference" />
+    <attr name="border_color" format="reference" />
+    <attr name="round_back_theme_1000" format="reference" />
+    <attr name="main_background" format="reference" />
+    <attr name="search_icon" format="reference" />
+
+    <attr name="settings_account" format="reference"/>
+
+    <attr name="account_pass" format="reference"/>
+    <attr name="account_provider" format="reference"/>
+    <attr name="account_profile" format="reference"/>
+    <attr name="account_log" format="reference"/>
+
+    <attr name="pref_theme" format="reference"/>
+    <attr name="pref_notif" format="reference"/>
+
+    <attr name="app_cache" format="reference"/>
+    <attr name="app_perst" format="reference"/>
+
+<!--    <style name="Widget.Theme.ChatApplicationBasics.ActionBar.Fullscreen" parent="Widget.AppCompat.ActionBar">-->
+<!--        <item name="android:background">@color/black_overlay</item>-->
+<!--    </style>-->
+
+<!--    <style name="Widget.Theme.ChatApplicationBasics.ButtonBar.Fullscreen" parent="">-->
+<!--        <item name="android:background">@color/black_overlay</item>-->
+<!--        <item name="android:buttonBarStyle">?android:attr/buttonBarStyle</item>-->
+<!--    </style>-->
+
+</resources>

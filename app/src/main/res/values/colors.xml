@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="teal_200">#FF03DAC5</color>
+    <color name="teal_700">#FF018786</color>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="theme_color">#2176FF</color>
+    <color name="theme_color_80">#CC2176FF</color>
+    <color name="splash_theme">#335DFF</color>
+    <color name="theme_color_8">#142176FF</color>
+    <color name="main_background_color_light">#FFFFFF</color>
+    <color name="main_background_color_dark">#4D000000</color>
+    <color name="border_color_light">#BF000000</color>
+    <color name="border_color_dark">#196FFA</color>
+    <color name="black_overlay">#66000000</color>
+</resources>

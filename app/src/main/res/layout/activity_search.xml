@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="?attr/main_background"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".search.SearchActivity">
+
+    <RelativeLayout
+        android:layout_marginTop="10dp"
+        android:id="@+id/search_top"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.google.android.material.card.MaterialCardView
+            android:background="@android:color/secondary_text_dark_nodisable"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="10dp"
+            app:cardCornerRadius="15dp"
+            android:layout_marginTop="10dp"
+            android:layout_toStartOf="@+id/search_btn"
+            android:layout_marginStart="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/search_bar"
+                android:autofillHints=""
+                android:maxLines="1"
+                android:inputType="textPersonName"
+                android:clickable="true"
+                android:hapticFeedbackEnabled="true"
+                android:backgroundTint="@android:color/transparent"
+                android:layout_height="50dp"
+                android:layout_width="match_parent"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
+                android:paddingTop="4dp"
+                android:paddingBottom="4dp"
+                android:textSize="16sp"
+                android:hint="Search for someone..."/>
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:background="?android:attr/selectableItemBackground"
+            android:src="@drawable/search"
+            android:id="@+id/search_btn"
+            android:layout_marginEnd="10dp"
+            android:layout_centerVertical="true"
+            android:layout_alignParentEnd="true"
+            android:layout_width="48dp"
+            android:layout_height="48dp"/>
+
+    </RelativeLayout>
+
+    <com.google.android.material.progressindicator.LinearProgressIndicator
+        android:id="@+id/search_progress"
+        android:layout_below="@+id/search_top"
+        android:visibility="invisible"
+        app:indicatorColor="@color/theme_color"
+        android:layout_width="match_parent"
+        android:layout_height="25dp"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/search_results"
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_below="@+id/search_progress"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    </androidx.recyclerview.widget.RecyclerView>
+
+
+
+</RelativeLayout>

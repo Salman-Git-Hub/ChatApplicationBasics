@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="?attr/main_background"
+    android:id="@+id/main_view"
+    tools:context=".MainActivity">
+
+    <RelativeLayout
+        android:background="@color/theme_color_8"
+        android:id="@+id/top_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/user_profile_pic"
+            android:layout_width="35dp"
+            android:background="?attr/default_pfp"
+            android:src="?attr/default_pfp"
+            android:clickable="true"
+            android:hapticFeedbackEnabled="true"
+            android:layout_height="35dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="40dp"
+            android:layout_centerVertical="true" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Messages"
+            android:textColor="?attr/main_text"
+            android:textStyle="bold"
+            android:layout_centerInParent="true"
+            android:textSize="18sp"/>
+
+        <ImageView
+            android:id="@+id/search_icon"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginTop="40dp"
+            android:layout_marginEnd="20dp"
+            android:padding="4dp"
+            android:src="?attr/search_icon" />
+
+    </RelativeLayout>
+
+    <com.google.android.material.progressindicator.LinearProgressIndicator
+        android:layout_width="match_parent"
+        android:id="@+id/refresh_line"
+        android:layout_height="25dp"
+        app:indicatorColor="@color/theme_color"
+        android:visibility="gone"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/messages_recycler_view"/>
+
+</LinearLayout>

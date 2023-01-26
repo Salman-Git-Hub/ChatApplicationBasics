@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".SignInActivity"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:background="@color/theme_color_8">
+
+    <com.google.android.material.progressindicator.LinearProgressIndicator
+        android:id="@+id/l_progress_line"
+        android:layout_width="match_parent"
+        app:indicatorColor="@color/theme_color"
+        android:layout_height="20dp"
+        android:visibility="invisible" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="Sign In"
+            android:textAllCaps="true"
+            android:textColor="?attr/main_text"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/s_profile_select"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="40dp"
+            android:background="?attr/default_pfp"
+            android:clickable="true"
+            app:civ_border_color="?attr/border_color"
+            tools:ignore="SpeakableTextPresentCheck" />
+
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="40dp"
+            app:boxBackgroundMode="outline">
+
+            <EditText
+                android:id="@+id/s_email"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginStart="20sp"
+                android:layout_marginEnd="20dp"
+                android:autofillHints="emailAddress"
+                android:background="?attr/round_back_10"
+                android:hint="Email"
+                android:inputType="textEmailAddress"
+                android:maxLines="1"
+                android:paddingStart="20dp"
+                android:paddingTop="9dp"
+                android:paddingEnd="0dp"
+                android:textSize="16sp" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="5dp"
+            android:clickable="true"
+            android:id="@+id/forgot"
+            android:hapticFeedbackEnabled="true"
+            android:text="Forgot password?"
+            android:textAlignment="viewEnd"
+            android:textColor="@color/theme_color" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            app:boxBackgroundMode="outline"
+            app:passwordToggleEnabled="true">
+
+            <EditText
+                android:id="@+id/s_password"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginStart="20sp"
+                android:layout_marginEnd="20dp"
+                android:background="?attr/round_back_10"
+                android:hint="Password"
+                android:inputType="textPassword"
+                android:maxLines="1"
+                android:paddingStart="20dp"
+                android:paddingTop="9dp"
+                android:paddingEnd="0dp"
+                android:textSize="16sp" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/signin_btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="40dp"
+            android:layout_marginEnd="20dp"
+            android:background="@drawable/round_back_theme_1000"
+            android:text="Sign In"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp">
+
+            <TextView
+                android:id="@+id/divider_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_margin="8dp"
+                android:text="OR"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <View
+                android:id="@+id/left_divider"
+                android:layout_width="wrap_content"
+                android:layout_height="1dp"
+                android:layout_centerInParent="true"
+                android:layout_marginTop="40dp"
+                android:layout_toStartOf="@+id/divider_text"
+                android:background="?android:attr/listDivider" />
+
+            <View
+                android:id="@+id/rigth_divider"
+                android:layout_width="wrap_content"
+                android:layout_height="1dp"
+                android:layout_centerInParent="true"
+                android:layout_marginTop="40dp"
+                android:layout_toEndOf="@+id/divider_text"
+                android:background="?android:attr/listDivider" />
+
+
+        </RelativeLayout>
+
+        <com.google.android.gms.common.SignInButton
+            android:id="@+id/s_google_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp" />
+
+    </LinearLayout>
+
+
+</RelativeLayout>

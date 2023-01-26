@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/register_view"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:background="@color/theme_color_8"
+    tools:context=".RegisterActivity">
+
+    <com.google.android.material.progressindicator.LinearProgressIndicator
+        android:id="@+id/r_progress_line"
+        android:layout_width="match_parent"
+        app:indicatorColor="@color/theme_color"
+        android:layout_height="20dp"
+        android:visibility="invisible" />
+
+    <LinearLayout
+        android:layout_centerInParent="true"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:textColor="?attr/main_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAllCaps="true"
+            android:gravity="center"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:text="Register"/>
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/r_profile_select"
+            android:layout_gravity="center"
+            app:civ_border_width="2dp"
+            app:civ_border_color="?attr/border_color"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="40dp"
+            android:background="?attr/default_pfp"
+            android:clickable="true"
+            tools:ignore="SpeakableTextPresentCheck" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:boxBackgroundMode="outline"
+            android:layout_marginTop="40dp">
+
+            <EditText
+                android:focusable="true"
+                android:id="@+id/r_name"
+                android:layout_marginStart="20sp"
+                android:layout_marginEnd="20dp"
+                android:hint="Name"
+                android:paddingStart="20dp"
+                android:paddingTop="9dp"
+                android:paddingEnd="0dp"
+                android:textSize="16sp"
+                android:inputType="textPersonName"
+                android:maxLines="1"
+                android:background="?attr/round_back_10"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:autofillHints="name" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:boxBackgroundMode="outline"
+            android:layout_marginTop="20dp">
+
+            <EditText
+                android:focusable="true"
+                android:id="@+id/r_email"
+                android:layout_marginStart="20sp"
+                android:layout_marginEnd="20dp"
+                android:hint="Email"
+                android:paddingStart="20dp"
+                android:paddingTop="9dp"
+                android:paddingEnd="0dp"
+                android:textSize="16sp"
+                android:inputType="textEmailAddress"
+                android:maxLines="1"
+                android:background="?attr/round_back_10"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:autofillHints="emailAddress" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:boxBackgroundMode="outline"
+            android:layout_marginTop="20dp"
+            app:passwordToggleEnabled="true">
+
+            <EditText
+                android:focusable="true"
+                android:layout_marginStart="20sp"
+                android:layout_marginEnd="20dp"
+                android:id="@+id/r_password"
+                android:hint="Password"
+                android:textSize="16sp"
+                android:inputType="textPassword"
+                android:maxLines="1"
+                android:paddingTop="9dp"
+                android:paddingStart="20dp"
+                android:paddingEnd="0dp"
+                android:background="?attr/round_back_10"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:autofillHints="password" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/r_registerbtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="40dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginStart="20dp"
+            android:background="@drawable/round_back_theme_1000"
+            android:text="Register Now"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            />
+        <RelativeLayout
+            android:layout_marginTop="30dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/divider_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_margin="8dp"
+                android:text="OR"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <View
+                android:id="@+id/left_divider"
+                android:layout_width="wrap_content"
+                android:layout_height="1dp"
+                android:layout_centerInParent="true"
+                android:layout_marginTop="40dp"
+                android:layout_toStartOf="@+id/divider_text"
+                android:background="?android:attr/listDivider" />
+            <View
+                android:id="@+id/rigth_divider"
+                android:layout_width="wrap_content"
+                android:layout_toEndOf="@+id/divider_text"
+                android:layout_height="1dp"
+                android:layout_centerInParent="true"
+                android:background="?android:attr/listDivider"
+                android:layout_marginTop="40dp"/>
+
+
+        </RelativeLayout>
+
+        <com.google.android.gms.common.SignInButton
+            android:layout_marginTop="10dp"
+            android:id="@+id/r_google_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <RelativeLayout
+            android:layout_marginTop="30dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/signin_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp"
+                android:clickable="true"
+                android:hapticFeedbackEnabled="true"
+                android:text="Already have an account?"
+                android:textColor="@color/theme_color_80"
+                android:textSize="14sp"
+                android:textStyle="normal" />
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+</RelativeLayout>

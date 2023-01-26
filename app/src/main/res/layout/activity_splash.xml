@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/splash_theme"
+    style="@android:style/Theme.NoTitleBar.Fullscreen"
+    tools:context=".SplashActivity"
+    android:gravity="center">
+
+    <ImageView
+        android:id="@+id/splash_icon"
+        android:src="@mipmap/ic_launcher"
+        android:scaleType="centerCrop"
+        android:layout_width="192dp"
+        android:layout_height="192dp"/>
+
+</LinearLayout>

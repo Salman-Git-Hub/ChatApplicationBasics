@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".chat.ChatActivity">
+    
+    <RelativeLayout
+        android:id="@+id/chat_bar"
+        android:background="@color/theme_color_8"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        
+        <ImageView
+            android:scaleType="fitCenter"
+            android:id="@+id/chat_back"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:src="@drawable/back_icon"
+            android:padding="8sp"
+            android:clickable="true"
+            android:background="?android:attr/selectableItemBackground"
+            android:hapticFeedbackEnabled="true"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="6dp"
+            android:contentDescription="Back button" />
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/chat_profile"
+            android:layout_toEndOf="@+id/chat_back"
+            android:layout_marginStart="4dp"
+            android:background="?attr/default_pfp"
+            android:padding="5sp"
+            android:layout_centerVertical="true"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="20dp"/>
+
+        <LinearLayout
+            android:layout_centerVertical="true"
+            android:layout_toEndOf="@+id/chat_profile"
+            android:orientation="vertical"
+            android:layout_marginStart="6dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Name"
+                android:id="@+id/chat_username"
+                android:maxLines="1"
+                android:textColor="?attr/main_text"
+                android:textStyle="bold"
+                android:textSize="18sp"/>
+
+<!--            <TextView-->
+<!--                android:id="@+id/user_status"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:text="Online"-->
+<!--                android:textSize="13sp"-->
+<!--                android:textColor="#304FFE"/>-->
+
+        </LinearLayout>
+    </RelativeLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_margin="5dp"
+        android:layout_below="@+id/chat_bar"
+        android:layout_above="@+id/chat_bottom"
+        android:id="@+id/chat_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    </androidx.recyclerview.widget.RecyclerView>
+
+    <RelativeLayout
+        android:id="@+id/chat_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/theme_color_8"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp">
+
+        <com.google.android.material.card.MaterialCardView
+            android:background="@android:color/secondary_text_dark_nodisable"
+            android:layout_centerVertical="true"
+            android:layout_toStartOf="@+id/card_btn"
+            android:layout_marginEnd="20dp"
+            app:cardCornerRadius="8dp"
+            android:layout_marginBottom="2dp"
+            android:layout_marginStart="15dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:autofillHints=""
+                android:maxLines="@integer/material_motion_duration_short_1"
+                android:inputType="textCapSentences"
+                android:scrollbarAlwaysDrawVerticalTrack="true"
+                android:scrollbars="vertical"
+                android:scrollbarStyle="insideInset"
+                android:overScrollMode="ifContentScrolls"
+                android:clickable="true"
+                android:hapticFeedbackEnabled="true"
+                android:backgroundTint="@android:color/transparent"
+                android:layout_height="50dp"
+                android:layout_width="match_parent"
+                android:id="@+id/message_text"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
+                android:paddingTop="4dp"
+                android:paddingBottom="4dp"
+                android:textSize="16sp"
+                android:hint="Your message"/>
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView
+            android:foreground="?android:attr/selectableItemBackground"
+            android:id="@+id/card_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="2dp"
+            android:clickable="true"
+            android:hapticFeedbackEnabled="true"
+            android:longClickable="true"
+            android:padding="2dp"
+            app:cardCornerRadius="24dp">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/send_btn"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:contentDescription="Send message"
+                android:src="@drawable/send" />
+
+        </com.google.android.material.card.MaterialCardView>
+
+    </RelativeLayout>
+
+</RelativeLayout>
