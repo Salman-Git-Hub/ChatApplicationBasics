@@ -16,6 +16,7 @@
         android:layout_height="wrap_content">
 
         <de.hdodenhof.circleimageview.CircleImageView
+            android:tooltipText="Settings"
             android:id="@+id/user_profile_pic"
             android:layout_width="35dp"
             android:background="?attr/default_pfp"
@@ -37,6 +38,10 @@
             android:textSize="18sp"/>
 
         <ImageView
+            android:clickable="true"
+            android:longClickable="true"
+            android:hapticFeedbackEnabled="true"
+            android:tooltipText="Search"
             android:id="@+id/search_icon"
             android:layout_width="35dp"
             android:layout_height="35dp"

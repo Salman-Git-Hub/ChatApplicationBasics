@@ -136,6 +136,7 @@
             app:cardCornerRadius="24dp">
 
             <de.hdodenhof.circleimageview.CircleImageView
+                android:tooltipText="Send message"
                 android:id="@+id/send_btn"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
