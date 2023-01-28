@@ -117,7 +117,12 @@ public class ChatActivity extends AppCompatActivity {
         chatRef.child("messages")
                 .child(millis)
                 .setValue(newMsg);
-        msgBox.setText("");
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                msgBox.setText("");
+            }
+        });
 
     }
 
