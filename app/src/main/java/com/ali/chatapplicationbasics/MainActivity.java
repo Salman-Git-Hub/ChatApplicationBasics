@@ -43,6 +43,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -58,15 +59,13 @@ public class MainActivity extends AppCompatActivity {
     private ImageView searchIcon;
     private LinearProgressIndicator progressIndicator;
     private boolean mainListenerState = false;
-    private boolean loadingState = false;
+
     private boolean firstLoad = true;
     private TimerTask checkTask;
     private FirebaseAuth mAuth;
     private FirebaseUser user;
     private MainUser mainUser;
     private StorageReference storageReference;
-    private String lastMsg = "";
-    private int unseenMsg = 0;
 
     private MessagesAdapter.OnItemClickListener listener;
 
@@ -188,23 +187,7 @@ public class MainActivity extends AppCompatActivity {
                 String profilePic = message.getProfilePic();
                 String groupId = message.getGroupId();
                 int unseen_Msg = message.getUnSeenMessages();
-                new Thread() {
-                    @Override
-                    public void run() {
-                        databaseReference.child("chat_groups")
-                                .get()
-                                .addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<DataSnapshot> task) {
-                                        if (task.isSuccessful()) {
-                                            loadSnap(task.getResult());
-                                        } else {
-                                            System.out.println(task.getException().getMessage());
-                                        }
-                                    }
-                                });
-                    }
-                }.start();
+
                 startActivity(new Intent(MainActivity.this, ChatActivity.class)
                         .putExtra("name", name)
                         .putExtra("last_msg", last_Msg)
@@ -235,7 +218,7 @@ public class MainActivity extends AppCompatActivity {
                     else {
                         mainUser.setUid(task.getResult().getKey());
                         if (! mainListenerState) {
-                            new Thread(() -> mainGroupListener()).start();
+                            new Thread(() -> userGroupListener()).start();
                             mainListenerState = true;
                         }
                     }
@@ -244,7 +227,8 @@ public class MainActivity extends AppCompatActivity {
                     try {
                         throw task.getException();
                     } catch (Exception e) {
-                        runOnMainThread(MainActivity.this, new Runnable() {
+                        e.printStackTrace();
+                        runOnUiThread( new Runnable() {
                             @Override
                             public void run() {
                                 Toast.makeText(MainActivity.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
@@ -255,28 +239,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-    private void mainGroupListener() {
-        DatabaseReference usersRef = databaseReference.child("chat_groups");
-        usersRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                loadingState = true;
-                runOnMainThread(MainActivity.this, new Runnable() {
-                    @Override
-                    public void run() {
-                        progressIndicator.setVisibility(View.VISIBLE);
-                    }
-                });
-                loadSnap(snapshot);
-            }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                ;
-            }
-        });
-        new Thread(this::userGroupListener).start();
-    }
 
     private void userGroupListener() {
         DatabaseReference userRef = databaseReference.child("users")
@@ -285,7 +248,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 HashMap<String, String> groupList = new HashMap<>();
-                for (DataSnapshot snap: snapshot.getChildren()) {
+                for (DataSnapshot snap: snapshot.getChildren()) { // getting group list
                     if (snap.getKey() == null) {
                         return;
                     }
@@ -297,39 +260,38 @@ public class MainActivity extends AppCompatActivity {
                 if (groupList.isEmpty()) {
                     return;
                 }
-                mainUser.setG_list(groupList);
-                if (loadingState) {
-                    return;
-                }
 
-                databaseReference.child("chat_groups").get()
-                        .addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-                            @Override
-                            public void onComplete(@NonNull Task<DataSnapshot> task) {
-                                if (task.isSuccessful()) {
-                                    if (!loadingState) { // just to be extra careful
-                                        new Thread(() -> loadSnap(task.getResult())).start();
-                                    }
-                                } else {
-                                    System.out.println("Error occurred!");
-                                    try {
-                                        throw task.getException();
-                                    } catch (Exception e) {
-                                        runOnMainThread(MainActivity.this, new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                Toast.makeText(MainActivity.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                                            }
-                                        });
-                                    }
+                // list for new groups
+                List<String> gList = new ArrayList<>();
+
+                if (mainUser.getG_list().isEmpty()) {
+                    mainUser.setG_list(groupList);
+                    gList.addAll(groupList.keySet());
+                } else {
+                    Set<String> oldGList = mainUser.getG_list().keySet();
+                    groupList.keySet().forEach(
+                            group -> {
+                                if (!oldGList.contains(group)) {
+                                    gList.add(group);
                                 }
                             }
-                        });
+                    );
+                    mainUser.setG_list(groupList);
+                }
+                if (firstLoad) {
+                    gList.addAll(groupList.keySet());
+                    firstLoad = false;
+                }
+                if (! gList.isEmpty()) {
+                    for (String groupId: gList) {
+                        new Thread(() -> groupListener(groupId)).start();
+                    }
+                }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                runOnMainThread(MainActivity.this, new Runnable() {
+                runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         Toast.makeText(MainActivity.this, "Group Error: " + error.getMessage(), Toast.LENGTH_LONG).show();
@@ -339,138 +301,111 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    private void groupListener(String groupId) {
+        databaseReference.child("chat_groups")
+                .child(groupId)
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        String name = snapshot.child("name").getValue(String.class);
+                        if (name == null) {
+                            name = "Unknown";
+                        }
+                        if (name.contains("&&&")) {
+                            name = name.replace("&&&", "").replace(user.getDisplayName(), "");
+                        }
+                        String profile_pic = snapshot.child("profile_pic").getValue(String.class);
+                        if (profile_pic == null) {
+                            profile_pic = "";
+                        }
+                        String finalProfile_pic = profile_pic;
+                        String finalName = name;
+                        new Thread(() -> loadMessages(snapshot.child("messages"), finalName, finalProfile_pic, groupId))
+                                .start();
+                    }
 
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
 
-    private void loadSnap(DataSnapshot snapshot) {
-        messagesList.clear();
-        for (DataSnapshot dataSnapshot: snapshot.getChildren()) {
-            if (mainUser.getG_list().isEmpty() || mainUser.getG_list() == null) {
+                    }
+                });
+    }
+
+    private void loadMessages(DataSnapshot snapshot, String finalName, String finalProfile_pic,
+                              String groupId) {
+        boolean last = true;
+
+        // reverse message list
+        List<DataSnapshot> newLi = new ArrayList<>();
+        snapshot.getChildren().forEach(newLi::add);
+        Collections.reverse(newLi);
+
+        String sender = "";
+        String id = "";
+        int unseenMsg = 0;
+        String lastMsg = "";
+        for (DataSnapshot snap: newLi) {
+            if (!last) {
                 break;
             }
-            if (mainUser.getG_list().keySet().contains(dataSnapshot.getKey())) {
-                System.out.println(dataSnapshot.getKey());
-                String groupId = dataSnapshot.getKey();
-                String name = dataSnapshot.child("name").getValue(String.class);
-                if (name == null) {
-                    return;
+            try {
+                Message e = snap.getValue(Message.class);
+                if (e == null) {
+                    throw new Exception("failed to read message");
                 }
-                if (name.contains("&&&")) {
-                    name = name.replace("&&&", "").replace(user.getDisplayName(), "");
+                e.setMessageId(snap.getKey());
+                sender = e.getName();
+                lastMsg = e.getMessage();
+                id = e.getMessageId();
+                if (e.getSeenList().isEmpty()) {
+                    unseenMsg = 0;
+                } else if (! e.getSeenList().contains(user.getUid())) {
+                    unseenMsg ++;
+                } else {
+                    // message is already seen by user so messages after this
+                    // are also seen
+                    last = false;
                 }
-                String profile_pic = dataSnapshot.child("profile_pic").getValue(String.class);
-                if (profile_pic == null) {
-                    profile_pic = "";
-                }
-                String finalProfile_pic = profile_pic;
-                String finalName = name;
-                databaseReference.child("chat_groups")
-                        .child(groupId)
-                        .child("messages")
-                        .addValueEventListener(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                boolean last = true;
-                                List<DataSnapshot> newLi = new ArrayList<>();
-                                snapshot.getChildren().forEach(newLi::add);
-                                Collections.reverse(newLi);
-                                String sender = "";
-                                String id = "";
-                                for (DataSnapshot snap: newLi) {
-                                    if (!last) {
-                                        break;
-                                    }
-                                    try {
-                                        Message e = snap.getValue(Message.class);
-                                        e.setMessageId(snap.getKey());
-                                        if (e == null) {
-                                            return;
-                                        }
-                                        sender = e.getName();
-                                        lastMsg = e.getMessage();
-                                        id = e.getMessageId();
-                                        if (e.getSeenList() == null || e.getSeenList().isEmpty()) {
-                                            unseenMsg = 0;
-                                        } else if (! e.getSeenList().contains(user.getUid())) {
-                                            unseenMsg ++;
-                                        } else {
-                                            last = false;
-                                        }
-                                    } catch (Exception e) {
-                                        System.out.println(e.getMessage());
-                                        e.printStackTrace();
-                                        return;
-                                    }
-
-                                }
-                                System.out.println(sender);
-                                MessageList message = new MessageList(finalName, groupId, lastMsg, finalProfile_pic, unseenMsg, sender);
-                                message.setMessageId(id);
-                                List<MessageList> toRemove = new ArrayList<>();
-                                messagesList.forEach(m -> {
-                                    if (m.getName().equals(message.getName()) && m.getMessageId().equals(message.getMessageId())) {
-                                        toRemove.add(m);
-                                    }
-                                });
-                                if (! toRemove.isEmpty()) {
-                                    messagesList.removeAll(toRemove);
-                                }
-                                messagesList.add(message);
-                                unseenMsg = 0;
-                                lastMsg = "";
-                                loadingState = false;
-                                runOnMainThread(MainActivity.this, new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        messagesAdapter.updateData(messagesList);
-                                        progressIndicator.setVisibility(View.INVISIBLE);
-                                    }
-                                });
-                            }
-
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError error) {
-
-                            }
-                        });
-            }
-            else {
-                break;
+            } catch (Exception e) {
+                e.printStackTrace();
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(MainActivity.this, "Error: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                });
+                return;
             }
 
         }
-        runOnMainThread(MainActivity.this, new Runnable() {
+        MessageList message = new MessageList(finalName, groupId, lastMsg, finalProfile_pic, unseenMsg, sender);
+        message.setMessageId(id);
+        List<MessageList> toRemove = new ArrayList<>();
+        List<MessageList> toAdd = new ArrayList<>();
+        if (messagesList.isEmpty()) {
+            messagesList.add(message);
+        } else {
+            messagesList.forEach(m -> {
+                if (m.getName().equals(message.getName())) {
+                    toRemove.add(m);
+                    toAdd.add(message);
+                }
+            });
+            messagesList.removeAll(toRemove);
+            messagesList.addAll(toAdd);
+            toRemove.clear();
+            toAdd.clear();
+        }
+
+        runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                progressIndicator.setVisibility(View.GONE);
+                messagesAdapter.updateData(messagesList);
+                progressIndicator.setVisibility(View.INVISIBLE);
             }
         });
-
     }
 
-
-    private void emailAuth() {
-        if (! user.isEmailVerified()) {
-            user.sendEmailVerification()
-                    .addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            runOnMainThread(MainActivity.this, new Runnable() {
-                                @Override
-                                public void run() {
-                                    if (task.isSuccessful()) {
-                                        Toast.makeText(MainActivity.this, "Verification mail sent!", Toast.LENGTH_SHORT).show();
-                                    }
-                                    else {
-                                        Toast.makeText(MainActivity.this, "Error sending verification mail!", Toast.LENGTH_SHORT).show();
-                                        Toast.makeText(MainActivity.this, "Error: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-                                    }
-                                }
-                            });
-                        }
-                    });
-
-        }
-    }
 
     private void checkUser() {
         System.out.println("Reloading!");
@@ -480,7 +415,7 @@ public class MainActivity extends AppCompatActivity {
                     throw task.getException();
                 } catch (FirebaseAuthInvalidUserException e) {
                     System.out.println(e.getMessage());
-                    runOnMainThread(MainActivity.this, new Runnable() {
+                    runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
                             Toast.makeText(MainActivity.this, "User not available!", Toast.LENGTH_SHORT).show();
@@ -496,7 +431,7 @@ public class MainActivity extends AppCompatActivity {
                     overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
 
                 } catch (Exception e) {
-                    runOnMainThread(MainActivity.this, new Runnable() {
+                    runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
                             Toast.makeText(MainActivity.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
@@ -512,8 +447,28 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private void runOnMainThread(Context context, Runnable runnable) {
-        ContextCompat.getMainExecutor(context).execute(runnable);
+    private void emailAuth() {
+        if (! user.isEmailVerified()) {
+            user.sendEmailVerification()
+                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    if (task.isSuccessful()) {
+                                        Toast.makeText(MainActivity.this, "Verification mail sent!", Toast.LENGTH_SHORT).show();
+                                    }
+                                    else {
+                                        Toast.makeText(MainActivity.this, "Error sending verification mail!", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(MainActivity.this, "Error: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            });
+                        }
+                    });
+
+        }
     }
 
 }
