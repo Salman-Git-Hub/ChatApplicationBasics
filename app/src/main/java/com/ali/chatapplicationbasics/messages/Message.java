@@ -21,10 +21,6 @@ public class Message {
         this.seenList = seenList;
     }
 
-    public void setMessageId(String messageId) {
-        this.messageId = messageId;
-    }
-
     public String getSender() {
         return sender;
     }
@@ -43,5 +39,9 @@ public class Message {
 
     public String getMessageId() {
         return messageId;
+    }
+
+    public void setMessageId(String messageId) {
+        this.messageId = messageId;
     }
 }

@@ -1,5 +1,11 @@
 package com.ali.chatapplicationbasics.settings;
 
+import android.app.Activity;
+import android.content.Intent;
+import android.os.Bundle;
+import android.widget.ImageView;
+import android.widget.Toast;
+
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
@@ -11,16 +17,6 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.app.Activity;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.os.Bundle;
-import android.view.View;
-import android.widget.ImageView;
-import android.widget.Toast;
-
-import com.ali.chatapplicationbasics.ExtraActivity;
-import com.ali.chatapplicationbasics.MainActivity;
 import com.ali.chatapplicationbasics.R;
 import com.ali.chatapplicationbasics.RegisterActivity;
 import com.ali.chatapplicationbasics.SignInActivity;
@@ -40,14 +36,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-
 public class ProviderActivity extends AppCompatActivity {
-    private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-    private FirebaseAuth mAuth = FirebaseAuth.getInstance();
+    private final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+    private final FirebaseAuth mAuth = FirebaseAuth.getInstance();
     private RecyclerView providerView;
     private GoogleSignInHandler signInHandler;
-    private Toolbar toolbar;
-
     ActivityResultLauncher<Intent> signInActivityResult = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             new ActivityResultCallback<ActivityResult>() {
@@ -59,9 +52,7 @@ public class ProviderActivity extends AppCompatActivity {
                 }
             }
     );
-
-
-    private ProviderHolder.OnItemClickListener listener = new ProviderHolder.OnItemClickListener() {
+    private final ProviderHolder.OnItemClickListener listener = new ProviderHolder.OnItemClickListener() {
         @Override
         public void onItemClick(String actionId, String provider, ImageView view) {
             if (actionId.equals("true")) {
@@ -103,6 +94,7 @@ public class ProviderActivity extends AppCompatActivity {
             }
         }
     };
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -144,8 +136,7 @@ public class ProviderActivity extends AppCompatActivity {
                     } catch (Exception e) {
                         throw new RuntimeException(e);
                     }
-                }
-                else {
+                } else {
                     addProviders();
                 }
             }
@@ -157,6 +148,7 @@ public class ProviderActivity extends AppCompatActivity {
         onBackPressed();
         return true;
     }
+
     private void handleSignInResult(ActivityResult result) {
         AuthCredential authCredential = signInHandler.googleAuthCredential(result);
         mAuth.signInWithCredential(authCredential)
@@ -177,7 +169,7 @@ public class ProviderActivity extends AppCompatActivity {
                             } catch (FirebaseAuthInvalidUserException userException) {
                                 Toast.makeText(ProviderActivity.this, "This account isn't available anymore!", Toast.LENGTH_SHORT).show();
                             } catch (FirebaseAuthInvalidCredentialsException
-                            credentialsException) {
+                                    credentialsException) {
                                 Toast.makeText(ProviderActivity.this, "Invalid credentials!", Toast.LENGTH_SHORT).show();
                             } catch (Exception e) {
                                 throw new RuntimeException(e);

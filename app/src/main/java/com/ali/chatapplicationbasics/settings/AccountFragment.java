@@ -2,7 +2,6 @@ package com.ali.chatapplicationbasics.settings;
 
 import static android.content.Context.MODE_PRIVATE;
 
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -28,8 +27,6 @@ import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 
 import com.ali.chatapplicationbasics.BuildConfig;
-import com.ali.chatapplicationbasics.ExtraActivity;
-import com.ali.chatapplicationbasics.MainActivity;
 import com.ali.chatapplicationbasics.R;
 import com.ali.chatapplicationbasics.RegisterActivity;
 import com.ali.chatapplicationbasics.SignInActivity;
@@ -52,18 +49,22 @@ import java.io.File;
 public class AccountFragment extends PreferenceFragmentCompat {
 
 
-    private OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+    private final OnBackPressedCallback callback = new OnBackPressedCallback(true) {
         @Override
         public void handleOnBackPressed() {
         }
     };
-    private ActivityResultLauncher<Intent> profilePicActivity = registerForActivityResult(
+    private final DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReferenceFromUrl("https://chatapplicationbasics-default-rtdb.firebaseio.com/");
+    private final StorageReference storageRef = FirebaseStorage.getInstance().getReference();
+    private FirebaseUser user;
+    private LinearProgressIndicator progressIndicator;
+    private final ActivityResultLauncher<Intent> profilePicActivity = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
                 @Override
                 public void onActivityResult(ActivityResult result) {
                     try {
                         requireActivity().getOnBackPressedDispatcher()
-                                        .addCallback((LifecycleOwner) requireContext(), callback);
+                                .addCallback((LifecycleOwner) requireContext(), callback);
                         runOnMainThread(new Runnable() {
                             @Override
                             public void run() {
@@ -83,8 +84,7 @@ public class AccountFragment extends PreferenceFragmentCompat {
                         Thread t = new Thread(() -> uploadFromFile(picturePath));
                         t.setPriority(Thread.MAX_PRIORITY);
                         t.start();
-                    }
-                    catch (NullPointerException e) {
+                    } catch (NullPointerException e) {
                         e.printStackTrace();
                         Thread t = new Thread(() -> uploadFromFile("none"));
                         t.setPriority(Thread.MAX_PRIORITY);
@@ -92,16 +92,11 @@ public class AccountFragment extends PreferenceFragmentCompat {
                     }
                 }
             });
-
-
-    private DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReferenceFromUrl("https://chatapplicationbasics-default-rtdb.firebaseio.com/");
-    private StorageReference storageRef = FirebaseStorage.getInstance().getReference();
-    private FirebaseUser user;
-    private LinearProgressIndicator progressIndicator;
     private FirebaseAuth mAuth;
+
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
-        progressIndicator = ((AppCompatActivity)requireActivity()).findViewById(R.id.progress);
+        progressIndicator = ((AppCompatActivity) requireActivity()).findViewById(R.id.progress);
         progressIndicator.setIndeterminate(true);
         setPreferencesFromResource(R.xml.account_preferences, rootKey);
         mAuth = FirebaseAuth.getInstance();
@@ -109,6 +104,7 @@ public class AccountFragment extends PreferenceFragmentCompat {
         accountOpt();
 
     }
+
     private void uploadFromFile(String file) {
         DatabaseReference userRef = databaseReference.child("users").child(user.getUid());
         if (file.equals("none")) {
@@ -163,8 +159,7 @@ public class AccountFragment extends PreferenceFragmentCompat {
                                 Thread n = new Thread(() -> updateProfile(task.getResult()));
                                 n.setPriority(Thread.MAX_PRIORITY);
                                 n.start();
-                            }
-                            else {
+                            } else {
                                 runOnMainThread(new Runnable() {
                                     @Override
                                     public void run() {
@@ -175,8 +170,7 @@ public class AccountFragment extends PreferenceFragmentCompat {
                         }
                     });
 
-                }
-                else {
+                } else {
                     runOnMainThread(new Runnable() {
                         @Override
                         public void run() {
@@ -204,18 +198,17 @@ public class AccountFragment extends PreferenceFragmentCompat {
                                     progressIndicator.setVisibility(View.GONE);
                                     requireActivity().
                                             getOnBackPressedDispatcher()
-                                                    .addCallback(new OnBackPressedCallback(true) {
-                                                        @Override
-                                                        public void handleOnBackPressed() {
-                                                            requireActivity().onBackPressed();
-                                                        }
-                                                    });
+                                            .addCallback(new OnBackPressedCallback(true) {
+                                                @Override
+                                                public void handleOnBackPressed() {
+                                                    requireActivity().onBackPressed();
+                                                }
+                                            });
                                     Toast.makeText(requireContext(), "Updated profile!", Toast.LENGTH_SHORT).show();
                                 }
                             });
 
-                        }
-                        else {
+                        } else {
                             try {
                                 throw task.getException();
                             } catch (Exception e) {
@@ -237,10 +230,11 @@ public class AccountFragment extends PreferenceFragmentCompat {
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
-                        if (! task.isSuccessful()) {
+                        if (!task.isSuccessful()) {
                             try {
                                 throw task.getException();
-                            } catch (FirebaseAuthRecentLoginRequiredException loginRequiredException) {
+                            } catch (
+                                    FirebaseAuthRecentLoginRequiredException loginRequiredException) {
                                 runOnMainThread(new Runnable() {
                                     @Override
                                     public void run() {
@@ -281,8 +275,7 @@ public class AccountFragment extends PreferenceFragmentCompat {
                                     }
                                 });
                             }
-                        }
-                        else {
+                        } else {
                             runOnMainThread(new Runnable() {
                                 @Override
                                 public void run() {
@@ -318,7 +311,7 @@ public class AccountFragment extends PreferenceFragmentCompat {
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
-                        if (! task.isSuccessful()) {
+                        if (!task.isSuccessful()) {
                             runOnMainThread(new Runnable() {
                                 @Override
                                 public void run() {
@@ -334,11 +327,11 @@ public class AccountFragment extends PreferenceFragmentCompat {
                 .removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
-                        if (! task.isSuccessful()) {
+                        if (!task.isSuccessful()) {
                             runOnMainThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    Toast.makeText(requireContext(),"Error: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(requireContext(), "Error: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                                 }
                             });
                         }
@@ -361,7 +354,7 @@ public class AccountFragment extends PreferenceFragmentCompat {
                             .addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
-                                    if (! task.isSuccessful()) {
+                                    if (!task.isSuccessful()) {
                                         try {
                                             throw task.getException();
                                         } catch (Exception e) {
@@ -376,7 +369,7 @@ public class AccountFragment extends PreferenceFragmentCompat {
                                                 .putExtra("pass_to_extra", false)
                                                 .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
                                         requireActivity().overridePendingTransition(R.anim.fade_in
-                                        , R.anim.fade_out);
+                                                , R.anim.fade_out);
                                     }
                                 }
                             });

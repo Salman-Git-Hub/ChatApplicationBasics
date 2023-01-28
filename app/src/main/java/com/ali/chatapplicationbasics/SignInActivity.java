@@ -19,7 +19,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 
 import com.ali.chatapplicationbasics.utils.GoogleSignInHandler;
-import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -37,16 +36,14 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
-import de.hdodenhof.circleimageview.CircleImageView;
-
 public class SignInActivity extends AppCompatActivity {
 
+    private final DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReferenceFromUrl("https://chatapplicationbasics-default-rtdb.firebaseio.com/");
+    private final StorageReference storageRef = FirebaseStorage.getInstance().getReference();
     private SignInButton googleBtn;
     private EditText emailView, passView;
-
     private LinearProgressIndicator progressIndicator;
     private AppCompatButton loginBtn;
-
     private boolean re_auth = false;
     private boolean pass_to_extra = false;
     private boolean delete_need = false;
@@ -54,22 +51,18 @@ public class SignInActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private FirebaseUser user;
     private GoogleSignInHandler signInHandler;
-    private TextView forgotView;
-    private DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReferenceFromUrl("https://chatapplicationbasics-default-rtdb.firebaseio.com/");
-    private StorageReference storageRef = FirebaseStorage.getInstance().getReference();
     ActivityResultLauncher<Intent> signInActivityResult = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             new ActivityResultCallback<ActivityResult>() {
                 @Override
                 public void onActivityResult(ActivityResult result) {
                     if (result.getResultCode() == Activity.RESULT_OK) {
-                       new Thread(() -> handleSignInResult(result)).start();
+                        new Thread(() -> handleSignInResult(result)).start();
                     }
                 }
             }
     );
-
-
+    private TextView forgotView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -126,7 +119,7 @@ public class SignInActivity extends AppCompatActivity {
                 if (emailView.getText().toString().isEmpty()) {
                     Toast.makeText(SignInActivity.this, "Empty email!", Toast.LENGTH_SHORT).show();
                     emailView.requestFocus();
-                } else if (! Patterns.EMAIL_ADDRESS.matcher(emailView.getText().toString()).matches()) {
+                } else if (!Patterns.EMAIL_ADDRESS.matcher(emailView.getText().toString()).matches()) {
                     Toast.makeText(SignInActivity.this, "Invalid email!", Toast.LENGTH_SHORT).show();
                     emailView.requestFocus();
                 } else {
@@ -143,7 +136,7 @@ public class SignInActivity extends AppCompatActivity {
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
-                        if (! task.isSuccessful()) {
+                        if (!task.isSuccessful()) {
                             try {
                                 throw task.getException();
                             } catch (Exception e) {
@@ -175,10 +168,11 @@ public class SignInActivity extends AppCompatActivity {
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
-                        if (! task.isSuccessful()) {
+                        if (!task.isSuccessful()) {
                             try {
                                 throw task.getException();
-                            } catch (FirebaseAuthRecentLoginRequiredException loginRequiredException) {
+                            } catch (
+                                    FirebaseAuthRecentLoginRequiredException loginRequiredException) {
                                 runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
@@ -217,8 +211,7 @@ public class SignInActivity extends AppCompatActivity {
                                     }
                                 });
                             }
-                        }
-                        else {
+                        } else {
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
@@ -247,7 +240,7 @@ public class SignInActivity extends AppCompatActivity {
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
-                        if (! task.isSuccessful()) {
+                        if (!task.isSuccessful()) {
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
@@ -263,11 +256,11 @@ public class SignInActivity extends AppCompatActivity {
                 .removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
-                        if (! task.isSuccessful()) {
+                        if (!task.isSuccessful()) {
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    Toast.makeText(SignInActivity.this,"Error: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(SignInActivity.this, "Error: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                                 }
                             });
                         }
@@ -286,7 +279,7 @@ public class SignInActivity extends AppCompatActivity {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                if (! Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+                if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
                     Toast.makeText(SignInActivity.this, "Invalid email!", Toast.LENGTH_SHORT).show();
                 } else if (email.isEmpty()) {
                     Toast.makeText(SignInActivity.this, "Empty email!", Toast.LENGTH_SHORT).show();
@@ -335,21 +328,22 @@ public class SignInActivity extends AppCompatActivity {
                                 });
 
                             }
-                           runOnUiThread(new Runnable() {
-                               @Override
-                               public void run() {
-                                   try {
-                                       throw task.getException();
-                                   } catch (FirebaseAuthInvalidUserException userException) {
-                                       Toast.makeText(SignInActivity.this, "This account isn't available anymore!", Toast.LENGTH_SHORT).show();
-                                   } catch (FirebaseAuthInvalidCredentialsException credentialsException) {
-                                       Toast.makeText(SignInActivity.this, "Invalid credentials!", Toast.LENGTH_SHORT).show();
-                                   } catch (Exception e) {
-                                       System.out.println(e.getMessage());
-                                       Toast.makeText(SignInActivity.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                                   }
-                               }
-                           });
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    try {
+                                        throw task.getException();
+                                    } catch (FirebaseAuthInvalidUserException userException) {
+                                        Toast.makeText(SignInActivity.this, "This account isn't available anymore!", Toast.LENGTH_SHORT).show();
+                                    } catch (
+                                            FirebaseAuthInvalidCredentialsException credentialsException) {
+                                        Toast.makeText(SignInActivity.this, "Invalid credentials!", Toast.LENGTH_SHORT).show();
+                                    } catch (Exception e) {
+                                        System.out.println(e.getMessage());
+                                        Toast.makeText(SignInActivity.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            });
                         }
                     });
         } else {
@@ -384,11 +378,10 @@ public class SignInActivity extends AppCompatActivity {
                                         throw task.getException();
                                     } catch (FirebaseAuthInvalidUserException invalidUser) {
                                         Toast.makeText(SignInActivity.this, "Email does not exists!", Toast.LENGTH_SHORT).show();
-                                    }
-                                    catch (FirebaseAuthInvalidCredentialsException invalidCredentails) {
+                                    } catch (
+                                            FirebaseAuthInvalidCredentialsException invalidCredentails) {
                                         Toast.makeText(SignInActivity.this, "Invalid password!", Toast.LENGTH_SHORT).show();
-                                    }
-                                    catch (Exception e) {
+                                    } catch (Exception e) {
                                         System.out.println(e.getMessage());
                                         Toast.makeText(SignInActivity.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                                     }
@@ -449,7 +442,8 @@ public class SignInActivity extends AppCompatActivity {
                                             throw task.getException();
                                         } catch (FirebaseAuthInvalidUserException userException) {
                                             Toast.makeText(SignInActivity.this, "This account isn't available anymore!", Toast.LENGTH_SHORT).show();
-                                        } catch (FirebaseAuthInvalidCredentialsException credentialsException) {
+                                        } catch (
+                                                FirebaseAuthInvalidCredentialsException credentialsException) {
                                             Toast.makeText(SignInActivity.this, "Invalid credentials!", Toast.LENGTH_SHORT).show();
                                         } catch (Exception e) {
                                             System.out.println(e.getMessage());
@@ -458,8 +452,7 @@ public class SignInActivity extends AppCompatActivity {
                                 });
                             }
                         });
-            }
-            else {
+            } else {
                 mAuth.signInWithCredential(authCredential)
                         .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                             @Override
@@ -483,21 +476,22 @@ public class SignInActivity extends AppCompatActivity {
                                     });
                                     return;
                                 }
-                               runOnUiThread(new Runnable() {
-                                   @Override
-                                   public void run() {
-                                       try {
-                                           throw task.getException();
-                                       } catch (FirebaseAuthInvalidUserException userException) {
-                                           Toast.makeText(SignInActivity.this, "This account isn't available anymore!", Toast.LENGTH_SHORT).show();
-                                       } catch (FirebaseAuthInvalidCredentialsException credentialsException) {
-                                           Toast.makeText(SignInActivity.this, "Invalid credentials!", Toast.LENGTH_SHORT).show();
-                                       } catch (Exception e) {
-                                           System.out.println(e.getMessage());
-                                           Toast.makeText(SignInActivity.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                                       }
-                                   }
-                               });
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        try {
+                                            throw task.getException();
+                                        } catch (FirebaseAuthInvalidUserException userException) {
+                                            Toast.makeText(SignInActivity.this, "This account isn't available anymore!", Toast.LENGTH_SHORT).show();
+                                        } catch (
+                                                FirebaseAuthInvalidCredentialsException credentialsException) {
+                                            Toast.makeText(SignInActivity.this, "Invalid credentials!", Toast.LENGTH_SHORT).show();
+                                        } catch (Exception e) {
+                                            System.out.println(e.getMessage());
+                                            Toast.makeText(SignInActivity.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+                                });
                             }
                         });
             }

@@ -8,6 +8,10 @@ import java.util.Locale;
 
 public class RelativeTime {
 
+    private static String capsAMtoSmall(String time) {
+        return time.replace("AM", "am").replace("PM", "pm");
+    }
+
     public String getTimeAgo(long time) {
 
         final DateFormat sdfTime = new SimpleDateFormat("h:mm aa", Locale.ENGLISH);
@@ -51,10 +55,6 @@ public class RelativeTime {
         } else {
             return capsAMtoSmall(sdfY.format(timeCal.getTime()));
         }
-    }
-
-    private static String capsAMtoSmall(String time) {
-        return time.replace("AM", "am").replace("PM","pm");
     }
 
 }

@@ -17,15 +17,10 @@ import java.util.List;
 
 public class ProviderHolder extends RecyclerView.Adapter<ProviderHolder.ProviderViewHolder> {
 
-    public interface OnItemClickListener {
-        void onItemClick(String actionId, String provider, ImageView view);
-    }
-    private OnItemClickListener listener;
-
-    private List<String> providerList;
-    private List<String> providers = Arrays.asList("google.com", "password");
-    private Context context;
-
+    private final OnItemClickListener listener;
+    private final List<String> providerList;
+    private final List<String> providers = Arrays.asList("google.com", "password");
+    private final Context context;
     public ProviderHolder(List<String> providerList, Context context, OnItemClickListener listener) {
         this.providerList = providerList;
         this.context = context;
@@ -77,10 +72,15 @@ public class ProviderHolder extends RecyclerView.Adapter<ProviderHolder.Provider
         return providers.size();
     }
 
+    public interface OnItemClickListener {
+        void onItemClick(String actionId, String provider, ImageView view);
+    }
+
     public class ProviderViewHolder extends RecyclerView.ViewHolder {
 
-        private ImageView providerImage, providerAction;
-        private TextView providerText;
+        private final ImageView providerImage;
+        private final ImageView providerAction;
+        private final TextView providerText;
 
         public ProviderViewHolder(@NonNull View itemView) {
             super(itemView);

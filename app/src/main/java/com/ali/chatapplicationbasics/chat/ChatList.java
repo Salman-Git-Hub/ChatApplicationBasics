@@ -2,7 +2,10 @@ package com.ali.chatapplicationbasics.chat;
 
 public class ChatList {
 
-    private String name, message, time, sender;
+    private final String name;
+    private final String message;
+    private final String time;
+    private final String sender;
 
     public ChatList(String name, String message, String time, String sender) {
         this.name = name;

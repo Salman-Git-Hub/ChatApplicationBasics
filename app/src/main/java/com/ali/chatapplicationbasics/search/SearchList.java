@@ -5,11 +5,11 @@ import java.util.List;
 
 public class SearchList {
 
-    private String profile;
-    private String username;
-    private List<String> friendList;
-    private String userId;
-    private HashMap<String, String> groupList;
+    private final String profile;
+    private final String username;
+    private final List<String> friendList;
+    private final String userId;
+    private final HashMap<String, String> groupList;
 
 
     public SearchList(String profile, String username, List<String> friendList, String userId, HashMap<String, String> groupList) {

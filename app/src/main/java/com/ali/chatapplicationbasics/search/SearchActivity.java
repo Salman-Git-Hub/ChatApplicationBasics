@@ -1,16 +1,16 @@
 package com.ali.chatapplicationbasics.search;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.os.Bundle;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.ali.chatapplicationbasics.MainUser;
 import com.ali.chatapplicationbasics.R;
@@ -37,14 +37,14 @@ public class SearchActivity extends AppCompatActivity {
     private RecyclerView searchRecyclerView;
     private LinearProgressIndicator progressIndicator;
 
-    private List<SearchList> searchLists = new ArrayList<>();
+    private final List<SearchList> searchLists = new ArrayList<>();
 
     private SearchAdapter searchAdapter;
 
-    private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+    private final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     private MainUser mainUser;
 
-    private DatabaseReference database = FirebaseDatabase.getInstance().getReferenceFromUrl("https://chatapplicationbasics-default-rtdb.firebaseio.com/");
+    private final DatabaseReference database = FirebaseDatabase.getInstance().getReferenceFromUrl("https://chatapplicationbasics-default-rtdb.firebaseio.com/");
 
     private DatabaseReference userRef;
 
@@ -108,7 +108,7 @@ public class SearchActivity extends AppCompatActivity {
     private void parseSnapshot(String txt, DataSnapshot snapshot) {
         List<SearchList> list = new ArrayList<>();
         searchLists.clear();
-        for (DataSnapshot snap: snapshot.getChildren()) {
+        for (DataSnapshot snap : snapshot.getChildren()) {
             MainUser u = snap.getValue(MainUser.class);
             u.setUid(snap.getKey());
             SearchList s = new SearchList(u.getProfile_pic(), u.getName(),
@@ -134,7 +134,7 @@ public class SearchActivity extends AppCompatActivity {
         SearchAdapter.OnItemClickListener listener = new SearchAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(String userId, String name, List<String> friendList, HashMap<String, String> groupList, String reason,
-            View view) {
+                                    View view) {
                 if (reason.equals("add")) {
                     progressIndicator.setVisibility(View.VISIBLE);
                     new Thread(() -> addUser(userId, name, friendList, groupList, view)).start();
@@ -193,7 +193,7 @@ public class SearchActivity extends AppCompatActivity {
         if (userFList == null) {
             userFList = new ArrayList<>();
             userFList.add(userId);
-        } else if (! userFList.contains(userId)) {
+        } else if (!userFList.contains(userId)) {
             userFList.add(userId);
         }
         userRef.child("f_list").setValue(userFList);

@@ -1,7 +1,5 @@
 package com.ali.chatapplicationbasics;
 
-import android.Manifest;
-import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -20,7 +18,6 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
-import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 
 import com.ali.chatapplicationbasics.utils.GoogleSignInHandler;
@@ -28,7 +25,6 @@ import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.progressindicator.LinearProgressIndicator;
-import com.google.firebase.auth.ActionCodeSettings;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -42,12 +38,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import com.karumi.dexter.Dexter;
-import com.karumi.dexter.MultiplePermissionsReport;
-import com.karumi.dexter.PermissionToken;
-import com.karumi.dexter.listener.PermissionRequest;
-import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
-import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -55,21 +45,19 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.List;
 
 
 public class RegisterActivity extends AppCompatActivity {
 
-    private boolean enabled = false;
+    private final boolean enabled = false;
+    LinearProgressIndicator progressIndicator;
+    DatabaseReference databaseReference;
     private SignInButton googleBtn;
     private GoogleSignInHandler signInHandler;
     private AppCompatButton registerbtn;
-    LinearProgressIndicator progressIndicator;
     private TextView nameView, emailView, passwordView, signin_text;
     private FirebaseAuth mAuth;
     private StorageReference storageRef;
-
-    DatabaseReference databaseReference;
     ActivityResultLauncher<Intent> profilePicActivity = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
                 @Override
@@ -88,8 +76,7 @@ public class RegisterActivity extends AppCompatActivity {
                         String picturePath = cursor.getString(columnIndex);
                         cursor.close();
                         new Thread(() -> uploadFromFile(picturePath)).start();
-                    }
-                    catch (NullPointerException e) {
+                    } catch (NullPointerException e) {
                         new Thread(() -> uploadFromFile("none")).start();
                     }
                 }
@@ -103,6 +90,25 @@ public class RegisterActivity extends AppCompatActivity {
                 }
             });
 
+    private static byte[] getImageBytes(String imageUrl) throws IOException {
+        URL url = new URL(imageUrl);
+
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+
+        try (InputStream stream = url.openStream()) {
+            byte[] buffer = new byte[4096];
+
+            while (true) {
+                int bytesRead = stream.read(buffer);
+                if (bytesRead < 0) {
+                    break;
+                }
+                output.write(buffer, 0, bytesRead);
+            }
+        }
+
+        return output.toByteArray();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -207,8 +213,7 @@ public class RegisterActivity extends AppCompatActivity {
                             }
                         }
                     });
-        }
-        else {
+        } else {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -233,7 +238,7 @@ public class RegisterActivity extends AppCompatActivity {
         String txt_pass = passwordView.getText().toString();
         String txt_name = nameView.getText().toString().trim();
         System.out.println(txt_name);
-        if (! Patterns.EMAIL_ADDRESS.matcher(txt_email).matches()) {
+        if (!Patterns.EMAIL_ADDRESS.matcher(txt_email).matches()) {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -242,8 +247,7 @@ public class RegisterActivity extends AppCompatActivity {
                     emailView.requestFocus();
                 }
             });
-        }
-        else if (txt_pass.isEmpty()) {
+        } else if (txt_pass.isEmpty()) {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -274,21 +278,21 @@ public class RegisterActivity extends AppCompatActivity {
                                     }
                                 });
                                 new Thread(() -> signIn(txt_name, txt_email, txt_pass)).start();
-                            }
-                            else {
+                            } else {
                                 runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
                                         progressIndicator.setVisibility(View.GONE);
                                         try {
                                             throw task.getException();
-                                        }
-                                        catch (FirebaseAuthWeakPasswordException weakPasswordException) {
+                                        } catch (
+                                                FirebaseAuthWeakPasswordException weakPasswordException) {
                                             Toast.makeText(RegisterActivity.this, "Weak Password!", Toast.LENGTH_SHORT).show();
-                                        }
-                                        catch (FirebaseAuthInvalidCredentialsException invalidCredentialsException) {
+                                        } catch (
+                                                FirebaseAuthInvalidCredentialsException invalidCredentialsException) {
                                             Toast.makeText(RegisterActivity.this, "Malformed email", Toast.LENGTH_SHORT).show();
-                                        } catch (FirebaseAuthUserCollisionException collisionException) {
+                                        } catch (
+                                                FirebaseAuthUserCollisionException collisionException) {
                                             Toast.makeText(RegisterActivity.this, "Email already exists!", Toast.LENGTH_SHORT).show();
                                         } catch (Exception e) {
                                             System.out.println(e.getMessage());
@@ -303,8 +307,6 @@ public class RegisterActivity extends AppCompatActivity {
                     });
         }
     }
-
-
 
     private void signIn(String username, String email, String password) {
         UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
@@ -348,8 +350,7 @@ public class RegisterActivity extends AppCompatActivity {
                                                         Intent i = new Intent(Intent.ACTION_PICK,
                                                                 android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                                                         new Thread(() -> profilePicActivity.launch(i)).start();
-                                                    }
-                                                    else {
+                                                    } else {
                                                         Toast.makeText(RegisterActivity.this, "Couldn't sign-in!", Toast.LENGTH_SHORT).show();
                                                     }
                                                 }
@@ -357,8 +358,7 @@ public class RegisterActivity extends AppCompatActivity {
                                         }
                                     });
 
-                        }
-                        else {
+                        } else {
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
@@ -413,8 +413,7 @@ public class RegisterActivity extends AppCompatActivity {
                                         new Thread(() -> updatePic(task.getResult())).start();
                                     }
                                 });
-                            }
-                            else {
+                            } else {
                                 runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
@@ -425,8 +424,7 @@ public class RegisterActivity extends AppCompatActivity {
                         }
                     });
 
-                }
-                else {
+                } else {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -444,7 +442,7 @@ public class RegisterActivity extends AppCompatActivity {
                 "/profile.png");
         FirebaseUser user = mAuth.getCurrentUser();
         DatabaseReference userRef = databaseReference.child("users").child(user.getUid());
-        userRef.child("profile_pic").setValue(uri.toString());
+        userRef.child("profile_pic").setValue(uri);
         new Thread(() -> {
             try {
                 profileRef.putBytes(getImageBytes(uri));
@@ -455,35 +453,13 @@ public class RegisterActivity extends AppCompatActivity {
                         Toast.makeText(RegisterActivity.this, "Error retrieving profile picture!", Toast.LENGTH_SHORT).show();
                     }
                 });
-               System.out.println(e.getMessage());
+                System.out.println(e.getMessage());
             }
         }).start();
 //        ContextCompat.getMainExecutor(this)
 //                .execute(() -> Toast.makeText(this, "Uploaded profile picture!", Toast.LENGTH_SHORT).show());
 
     }
-
-    private static byte[] getImageBytes(String imageUrl) throws IOException
-    {
-        URL url = new URL(imageUrl);
-
-        ByteArrayOutputStream output = new ByteArrayOutputStream();
-
-        try (InputStream stream = url.openStream())
-        {
-            byte[] buffer = new byte[4096];
-
-            while (true)
-            {
-                int bytesRead = stream.read(buffer);
-                if (bytesRead < 0) { break; }
-                output.write(buffer, 0, bytesRead);
-            }
-        }
-
-        return output.toByteArray();
-    }
-
 
     private void updatePic(Uri uri) {
         if (uri == null) {
@@ -517,8 +493,7 @@ public class RegisterActivity extends AppCompatActivity {
                                 }
                             });
 
-                        }
-                        else {
+                        } else {
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {

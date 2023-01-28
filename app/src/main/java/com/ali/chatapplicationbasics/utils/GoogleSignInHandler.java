@@ -18,8 +18,8 @@ import com.google.firebase.auth.GoogleAuthProvider;
 
 public class GoogleSignInHandler {
 
-    private Context context;
-    private String idToken;
+    private final Context context;
+    private final String idToken;
     private GoogleSignInClient signInClient;
 
 

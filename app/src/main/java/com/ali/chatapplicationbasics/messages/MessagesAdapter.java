@@ -11,20 +11,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.ali.chatapplicationbasics.R;
 import com.squareup.picasso.Picasso;
 
-import java.util.Arrays;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.MyViewHolder> {
 
-    public interface OnItemClickListener {
-        void onItemClick(MessageList message);
-    }
-
     private List<MessageList> messagesLists;
-    private OnItemClickListener listener;
-
+    private final OnItemClickListener listener;
     public MessagesAdapter(List<MessageList> messages, OnItemClickListener listener) {
         this.messagesLists = messages;
         this.listener = listener;
@@ -39,7 +33,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.MyView
     @Override
     public void onBindViewHolder(@NonNull MessagesAdapter.MyViewHolder holder, int position) {
         MessageList list2 = messagesLists.get(position);
-        if (! list2.getProfilePic().isEmpty()) {
+        if (!list2.getProfilePic().isEmpty()) {
             Picasso.get().load(list2.getProfilePic()).into(holder.profilePic);
             holder.profilePic.setContentDescription(list2.getProfilePic());
         }
@@ -84,10 +78,16 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.MyView
         return messagesLists.size();
     }
 
+    public interface OnItemClickListener {
+        void onItemClick(MessageList message);
+    }
+
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
-        private CircleImageView profilePic;
-        private TextView name, lastMessage, unSeenMessages;
+        private final CircleImageView profilePic;
+        private final TextView name;
+        private final TextView lastMessage;
+        private final TextView unSeenMessages;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -101,10 +101,10 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.MyView
                     String sender = lastMessage.getContentDescription().toString();
                     String msg = lastMessage.getText().toString().replace(sender + ": ", "");
                     listener.onItemClick(new MessageList(name.getText().toString(),
-                                    name.getContentDescription().toString(),
-                                    msg,
-                                    profilePic.getContentDescription().toString(),
-                                    Integer.parseInt(unSeenMessages.getText().toString()), sender));
+                            name.getContentDescription().toString(),
+                            msg,
+                            profilePic.getContentDescription().toString(),
+                            Integer.parseInt(unSeenMessages.getText().toString()), sender));
                 }
             });
         }

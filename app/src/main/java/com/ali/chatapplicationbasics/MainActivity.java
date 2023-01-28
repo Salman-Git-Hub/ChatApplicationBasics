@@ -1,18 +1,14 @@
 package com.ali.chatapplicationbasics;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.icu.text.Edits;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -38,10 +34,8 @@ import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.Timer;
@@ -51,25 +45,21 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MainActivity extends AppCompatActivity {
 
-    private List<MessageList> messagesList = new ArrayList<>();
+    private final List<MessageList> messagesList = new ArrayList<>();
+    DatabaseReference databaseReference;
     private RecyclerView messagesRecyclerView;
-
     private MessagesAdapter messagesAdapter;
     private CircleImageView userProfilePic;
     private ImageView searchIcon;
     private LinearProgressIndicator progressIndicator;
     private boolean mainListenerState = false;
-
     private boolean firstLoad = true;
     private TimerTask checkTask;
     private FirebaseAuth mAuth;
     private FirebaseUser user;
     private MainUser mainUser;
     private StorageReference storageReference;
-
     private MessagesAdapter.OnItemClickListener listener;
-
-    DatabaseReference databaseReference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,13 +95,13 @@ public class MainActivity extends AppCompatActivity {
         progressIndicator.setVisibility(View.VISIBLE);
         new Thread(this::userData).start();
 
-        if (user.getPhotoUrl() != null && !user.getPhotoUrl().toString().isEmpty()){
+        if (user.getPhotoUrl() != null && !user.getPhotoUrl().toString().isEmpty()) {
             Picasso.get().load(user.getPhotoUrl()).into(userProfilePic);
         }
         databaseReference.child("users").child(user.getUid())
                 .child("status").setValue("Online");
         databaseReference.child("users").child(user.getUid())
-                        .child("profile_pic")
+                .child("profile_pic")
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -153,8 +143,7 @@ public class MainActivity extends AppCompatActivity {
         };
 
 
-
-        new Thread(() -> new Timer().scheduleAtFixedRate(checkTask, 0L, 5*(60 * 1000))).start();
+        new Thread(() -> new Timer().scheduleAtFixedRate(checkTask, 0L, 5 * (60 * 1000))).start();
     }
 
     @Override
@@ -214,21 +203,19 @@ public class MainActivity extends AppCompatActivity {
                         startActivity(new Intent(MainActivity.this, RegisterActivity.class)
                                 .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
                         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-                    }
-                    else {
+                    } else {
                         mainUser.setUid(task.getResult().getKey());
-                        if (! mainListenerState) {
+                        if (!mainListenerState) {
                             new Thread(() -> userGroupListener()).start();
                             mainListenerState = true;
                         }
                     }
-                }
-                else {
+                } else {
                     try {
                         throw task.getException();
                     } catch (Exception e) {
                         e.printStackTrace();
-                        runOnUiThread( new Runnable() {
+                        runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
                                 Toast.makeText(MainActivity.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
@@ -248,7 +235,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 HashMap<String, String> groupList = new HashMap<>();
-                for (DataSnapshot snap: snapshot.getChildren()) { // getting group list
+                for (DataSnapshot snap : snapshot.getChildren()) { // getting group list
                     if (snap.getKey() == null) {
                         return;
                     }
@@ -282,8 +269,8 @@ public class MainActivity extends AppCompatActivity {
                     gList.addAll(groupList.keySet());
                     firstLoad = false;
                 }
-                if (! gList.isEmpty()) {
-                    for (String groupId: gList) {
+                if (!gList.isEmpty()) {
+                    for (String groupId : gList) {
                         new Thread(() -> groupListener(groupId)).start();
                     }
                 }
@@ -344,7 +331,7 @@ public class MainActivity extends AppCompatActivity {
         String id = "";
         int unseenMsg = 0;
         String lastMsg = "";
-        for (DataSnapshot snap: newLi) {
+        for (DataSnapshot snap : newLi) {
             if (!last) {
                 break;
             }
@@ -359,8 +346,8 @@ public class MainActivity extends AppCompatActivity {
                 id = e.getMessageId();
                 if (e.getSeenList().isEmpty()) {
                     unseenMsg = 0;
-                } else if (! e.getSeenList().contains(user.getUid())) {
-                    unseenMsg ++;
+                } else if (!e.getSeenList().contains(user.getUid())) {
+                    unseenMsg++;
                 } else {
                     // message is already seen by user so messages after this
                     // are also seen
@@ -439,8 +426,7 @@ public class MainActivity extends AppCompatActivity {
                     });
                 }
 
-            }
-            else {
+            } else {
                 new Thread(this::emailAuth).start();
             }
         });
@@ -448,7 +434,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void emailAuth() {
-        if (! user.isEmailVerified()) {
+        if (!user.isEmailVerified()) {
             user.sendEmailVerification()
                     .addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
@@ -458,8 +444,7 @@ public class MainActivity extends AppCompatActivity {
                                 public void run() {
                                     if (task.isSuccessful()) {
                                         Toast.makeText(MainActivity.this, "Verification mail sent!", Toast.LENGTH_SHORT).show();
-                                    }
-                                    else {
+                                    } else {
                                         Toast.makeText(MainActivity.this, "Error sending verification mail!", Toast.LENGTH_SHORT).show();
                                         Toast.makeText(MainActivity.this, "Error: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                                     }

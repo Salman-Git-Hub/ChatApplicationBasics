@@ -21,30 +21,22 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchViewHolder> {
 
 
-    public interface OnItemClickListener {
-        void onItemClick(String userId, String name, List<String> friendList, HashMap<String, String> groupList, String reason,
-        View view);
-    }
-
-
-    private List<SearchList> searchLists;
-    private String user;
-    private Context context;
     private static OnItemClickListener listener;
-
+    private List<SearchList> searchLists;
+    private final String user;
+    private final Context context;
     public SearchAdapter(List<SearchList> searchLists, Context context, OnItemClickListener listener,
                          String user) {
         this.searchLists = searchLists;
         this.context = context;
         this.user = user;
-        this.listener = listener;
+        SearchAdapter.listener = listener;
     }
 
     public void updateData(List<SearchList> searchLists) {
         this.searchLists = searchLists;
         notifyDataSetChanged();
     }
-
 
     @NonNull
     @Override
@@ -64,7 +56,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
         if (list.getFriendList() == null) {
             holder.userAction.setImageDrawable(context.getDrawable(R.drawable.search_action));
             reason = "add";
-        } else if (! list.getFriendList().contains(user)) {
+        } else if (!list.getFriendList().contains(user)) {
             holder.userAction.setImageDrawable(context.getDrawable(R.drawable.search_action));
             reason = "add";
         } else {
@@ -89,10 +81,16 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
         return searchLists.size();
     }
 
+    public interface OnItemClickListener {
+        void onItemClick(String userId, String name, List<String> friendList, HashMap<String, String> groupList, String reason,
+                         View view);
+    }
+
     public static class SearchViewHolder extends RecyclerView.ViewHolder {
 
-        private CircleImageView profile, userAction;
-        private TextView userName;
+        private final CircleImageView profile;
+        private final CircleImageView userAction;
+        private final TextView userName;
 
         public SearchViewHolder(@NonNull View itemView) {
             super(itemView);

@@ -1,24 +1,22 @@
 package com.ali.chatapplicationbasics.chat;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
-import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.ali.chatapplicationbasics.R;
 import com.ali.chatapplicationbasics.messages.Message;
 import com.ali.chatapplicationbasics.utils.RelativeTime;
-import com.google.android.material.card.MaterialCardView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -35,25 +33,21 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ChatActivity extends AppCompatActivity {
 
+    private final RelativeTime relativeTime = new RelativeTime();
     private ImageView backBtn;
     private CircleImageView profilePic, sendBtn;
     private TextView username;
     private EditText msgBox;
-    private DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReferenceFromUrl("https://chatapplicationbasics-default-rtdb.firebaseio.com/");
+    private final DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReferenceFromUrl("https://chatapplicationbasics-default-rtdb.firebaseio.com/");
     private DatabaseReference chatRef;
-    private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+    private final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     private Bundle bundle;
-    private List<ChatList> chatLists = new ArrayList<>();
-
+    private final List<ChatList> chatLists = new ArrayList<>();
     private int unseen = 0;
     private boolean background = false;
-
     private RecyclerView chatRecyclerView;
     private ChatAdapter chatAdapter;
-
-    private final RelativeTime relativeTime = new RelativeTime();
-
-    private boolean loadingFirst = true;
+    private final boolean loadingFirst = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -167,14 +161,14 @@ public class ChatActivity extends AppCompatActivity {
                         if (loadingFirst) {
                             chatLists.clear();
                         }
-                        for (DataSnapshot snap: snapshot.getChildren()) {
+                        for (DataSnapshot snap : snapshot.getChildren()) {
                             Message e = snap.getValue(Message.class);
                             e.setMessageId(snap.getKey());
                             List<String> seenUser = e.getSeenList();
-                            if (! seenUser.contains(user.getUid())) {
+                            if (!seenUser.contains(user.getUid())) {
                                 seenUser.add(user.getUid());
                             }
-                            if (! background) {
+                            if (!background) {
                                 chatRef.child("messages")
                                         .child(e.getMessageId())
                                         .child("seenList")
@@ -207,14 +201,14 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     private void markAsRead(DataSnapshot snapshot, int unseen) {
-        for (DataSnapshot snap: snapshot.getChildren()) {
+        for (DataSnapshot snap : snapshot.getChildren()) {
             if (unseen == 0) {
                 break;
             }
             Message e = snap.getValue(Message.class);
             e.setMessageId(snap.getKey());
             List<String> seen = e.getSeenList();
-            if (! seen.contains(user.getUid())) {
+            if (!seen.contains(user.getUid())) {
                 seen.add(user.getUid());
                 chatRef.child("messages")
                         .child(e.getMessageId())

@@ -26,17 +26,6 @@ public class MainUser {
         this.f_list = f_list;
     }
 
-    public void setG_list(HashMap<String, String> g_list) {
-        this.g_list = g_list;
-    }
-
-    public void setF_list(List<String> f_list) {
-        this.f_list = f_list;
-    }
-    public void setUid(String uid) {
-        this.Uid = uid;
-    }
-
     public String getName() {
         return name;
     }
@@ -49,6 +38,10 @@ public class MainUser {
         return Uid;
     }
 
+    public void setUid(String uid) {
+        this.Uid = uid;
+    }
+
     public String getProfile_pic() {
         return profile_pic;
     }
@@ -57,8 +50,16 @@ public class MainUser {
         return g_list;
     }
 
+    public void setG_list(HashMap<String, String> g_list) {
+        this.g_list = g_list;
+    }
+
     public List<String> getF_list() {
         return f_list;
+    }
+
+    public void setF_list(List<String> f_list) {
+        this.f_list = f_list;
     }
 
     public String getStatus() {

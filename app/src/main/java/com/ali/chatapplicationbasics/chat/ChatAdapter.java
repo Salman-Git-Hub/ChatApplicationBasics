@@ -17,9 +17,9 @@ import java.util.List;
 public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder> {
 
     private List<ChatList> chatLists;
-    private Context context;
+    private final Context context;
 
-    private String userId;
+    private final String userId;
 
     public ChatAdapter(List<ChatList> chatLists, Context context, String userId) {
         this.chatLists = chatLists;
@@ -62,8 +62,13 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder
 
     public class ChatViewHolder extends RecyclerView.ViewHolder {
 
-        private LinearLayout recvLayout, sendLayout;
-        private TextView recvText, recvTime, sendText, sendTime;
+        private final LinearLayout recvLayout;
+        private final LinearLayout sendLayout;
+        private final TextView recvText;
+        private final TextView recvTime;
+        private final TextView sendText;
+        private final TextView sendTime;
+
         public ChatViewHolder(@NonNull View itemView) {
             super(itemView);
 

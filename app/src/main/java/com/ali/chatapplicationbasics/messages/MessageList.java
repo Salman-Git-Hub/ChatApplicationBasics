@@ -2,15 +2,15 @@ package com.ali.chatapplicationbasics.messages;
 
 public class MessageList {
 
-    private String name;
-    private String groupId;
-    private String lastMessage;
-    private String profilePic;
+    private final String name;
+    private final String groupId;
+    private final String lastMessage;
+    private final String profilePic;
     private String messageId;
 
 
-    private String lastSender;
-    private int unSeenMessages;
+    private final String lastSender;
+    private final int unSeenMessages;
 
     public MessageList(String name, String groupId, String lastMessage, String profilePic, int unSeenMessages, String lastSender) {
         this.name = name;
@@ -24,6 +24,7 @@ public class MessageList {
     public String getLastSender() {
         return lastSender;
     }
+
     public String getName() {
         return name;
     }

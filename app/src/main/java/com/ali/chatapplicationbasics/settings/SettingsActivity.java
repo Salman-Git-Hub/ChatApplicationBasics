@@ -1,6 +1,5 @@
 package com.ali.chatapplicationbasics.settings;
 
-import android.app.Fragment;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -15,13 +14,10 @@ import androidx.preference.PreferenceFragmentCompat;
 import com.ali.chatapplicationbasics.R;
 import com.google.android.material.progressindicator.LinearProgressIndicator;
 
-import java.util.List;
-
 public class SettingsActivity extends AppCompatActivity {
 
-    private Toolbar toolbar;
-
     private static LinearProgressIndicator progressIndicator;
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

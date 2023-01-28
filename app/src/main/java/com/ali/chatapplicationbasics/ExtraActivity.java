@@ -1,10 +1,5 @@
 package com.ali.chatapplicationbasics;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.AppCompatButton;
-import androidx.appcompat.widget.Toolbar;
-
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -15,16 +10,18 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatButton;
+
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.progressindicator.LinearProgressIndicator;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthInvalidUserException;
 import com.google.firebase.auth.FirebaseAuthRecentLoginRequiredException;
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
-import com.google.firebase.auth.FirebaseUser;
 
 import java.util.Locale;
 
@@ -130,16 +127,14 @@ public class ExtraActivity extends AppCompatActivity {
                                 Toast.makeText(ExtraActivity.this, "Weak password!", Toast.LENGTH_SHORT).show();
                             }
                         });
-                    }
-                    catch (FirebaseAuthInvalidUserException userException) {
+                    } catch (FirebaseAuthInvalidUserException userException) {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
                                 Toast.makeText(ExtraActivity.this, "Account is no longer available!", Toast.LENGTH_SHORT).show();
                             }
                         });
-                    }
-                    catch (FirebaseAuthRecentLoginRequiredException requiredException) {
+                    } catch (FirebaseAuthRecentLoginRequiredException requiredException) {
 
                         runOnUiThread(new Runnable() {
                             @Override
@@ -158,8 +153,7 @@ public class ExtraActivity extends AppCompatActivity {
                         startActivity(new Intent(ExtraActivity.this, SignInActivity.class)
                                 .putExtra("re_authenticate", true)
                                 .putExtra("pass_to_extra", true));
-                    }
-                    catch (Exception e) {
+                    } catch (Exception e) {
                         System.out.println(e.getMessage());
                     }
                     runOnUiThread(new Runnable() {
@@ -220,16 +214,14 @@ public class ExtraActivity extends AppCompatActivity {
                     } else {
                         try {
                             throw task.getException();
-                        }
-                        catch (FirebaseAuthInvalidUserException userException) {
+                        } catch (FirebaseAuthInvalidUserException userException) {
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
                                     Toast.makeText(ExtraActivity.this, "Account is no longer available!", Toast.LENGTH_SHORT).show();
                                 }
                             });
-                        }
-                        catch (FirebaseAuthRecentLoginRequiredException requiredException) {
+                        } catch (FirebaseAuthRecentLoginRequiredException requiredException) {
 
                             runOnUiThread(new Runnable() {
                                 @Override
@@ -249,8 +241,7 @@ public class ExtraActivity extends AppCompatActivity {
                             startActivity(new Intent(ExtraActivity.this, SignInActivity.class)
                                     .putExtra("re_authenticate", true)
                                     .putExtra("pass_to_extra", true));
-                        }
-                        catch (Exception e) {
+                        } catch (Exception e) {
                             System.out.println(e.getMessage());
                         }
                         runOnUiThread(new Runnable() {
