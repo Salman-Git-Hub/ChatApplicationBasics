@@ -112,10 +112,21 @@ public class AccountFragment extends PreferenceFragmentCompat {
     private void uploadFromFile(String file) {
         DatabaseReference userRef = databaseReference.child("users").child(user.getUid());
         if (file.equals("none")) {
-//            userRef.child("profile_pic").setValue("");
-//            Thread n = new Thread(() -> updateProfile(null));
-//            n.setPriority(Thread.MAX_PRIORITY);
-//            n.start();
+            runOnMainThread(new Runnable() {
+                @Override
+                public void run() {
+                    progressIndicator.setVisibility(View.GONE);
+                    requireActivity().
+                            getOnBackPressedDispatcher()
+                            .addCallback(new OnBackPressedCallback(true) {
+                                @Override
+                                public void handleOnBackPressed() {
+                                    requireActivity().onBackPressed();
+                                }
+                            });
+                    Toast.makeText(requireContext(), "Updated profile!", Toast.LENGTH_SHORT).show();
+                }
+            });
             return;
         }
         runOnMainThread(new Runnable() {
@@ -178,9 +189,6 @@ public class AccountFragment extends PreferenceFragmentCompat {
     }
 
     private void updateProfile(Uri uri) {
-//        if (uri == null) {
-//            uri = Uri.EMPTY;
-//        }
         UserProfileChangeRequest profileChangeRequest = new UserProfileChangeRequest.Builder()
                 .setPhotoUri(uri)
                 .build();
@@ -205,9 +213,6 @@ public class AccountFragment extends PreferenceFragmentCompat {
                                     Toast.makeText(requireContext(), "Updated profile!", Toast.LENGTH_SHORT).show();
                                 }
                             });
-//                            startActivity(new Intent(requireContext(), MainActivity.class)
-//                                    .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
-//                            requireActivity().overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
 
                         }
                         else {
