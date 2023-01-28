@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    
+
     <RelativeLayout
         android:layout_marginBottom="2dp"
         android:layout_marginTop="20dp"
@@ -10,17 +10,21 @@
         android:layout_height="wrap_content">
 
         <LinearLayout
+            android:layout_alignParentStart="true"
+            android:layout_toStartOf="@+id/line"
             android:orientation="vertical"
             android:id="@+id/recv_layout"
             android:layout_marginStart="20dp"
             android:layout_marginEnd="50dp"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content">
-            
+
             <TextView
                 android:id="@+id/recv_text"
+                android:layout_gravity="start"
                 android:padding="18dp"
                 android:textSize="15sp"
+                android:singleLine="false"
                 android:background="@drawable/message_box_recv"
                 android:text="This is a msg"
                 android:textColor="?attr/main_text"
@@ -30,25 +34,35 @@
                 android:id="@+id/recv_time"
                 android:layout_gravity="end"
                 android:layout_marginTop="2dp"
-                android:textSize="13sp"
+                android:textSize="10sp"
                 android:text="3 hrs ago"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
         </LinearLayout>
 
+        <View
+            android:layout_centerInParent="true"
+            android:layout_centerVertical="true"
+            android:id="@+id/line"
+            android:layout_width="2dp"
+            android:layout_height="2dp"/>
+
         <LinearLayout
+            android:layout_toEndOf="@+id/line"
             android:layout_alignParentEnd="true"
             android:orientation="vertical"
             android:id="@+id/send_layout"
             android:layout_marginStart="50dp"
             android:layout_marginEnd="20dp"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <TextView
+                android:layout_gravity="end"
                 android:id="@+id/send_text"
                 android:padding="18dp"
                 android:textSize="15sp"
+                android:singleLine="false"
                 android:background="@drawable/message_box_send"
                 android:text="This is a msg"
                 android:textColor="?attr/main_text"
@@ -58,7 +72,7 @@
                 android:id="@+id/send_time"
                 android:layout_gravity="start"
                 android:layout_marginTop="2dp"
-                android:textSize="13sp"
+                android:textSize="10sp"
                 android:text="3 hrs ago"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
