@@ -74,6 +74,12 @@ public class SearchActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    protected void onStop() {
+        searchLists.clear();
+        super.onStop();
+    }
+
     private void searchUser() {
         String txt = searchText.getText().toString();
         if (txt.isEmpty()) {
