@@ -63,7 +63,7 @@
         <activity
             android:name=".SignInActivity"
             android:exported="false"
-            android:noHistory="true" />
+            android:noHistory="false" />
         <activity
             android:name=".MainActivity"
             android:exported="true" />
