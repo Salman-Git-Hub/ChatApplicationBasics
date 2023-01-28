@@ -184,8 +184,13 @@ public class ChatActivity extends AppCompatActivity {
                             ChatList chat = new ChatList(name, msg, time, sender);
                             chatLists.add(chat);
                         }
-                        chatAdapter.updateData(chatLists);
-                        chatRecyclerView.smoothScrollToPosition(chatLists.size() - 1);
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                chatAdapter.updateData(chatLists);
+                                chatRecyclerView.smoothScrollToPosition(chatLists.size() - 1);
+                            }
+                        });
 
                     }
 
