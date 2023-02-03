@@ -17,13 +17,11 @@ import java.util.List;
 public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder> {
 
     private List<ChatList> chatLists;
-    private final Context context;
 
     private final String userId;
 
-    public ChatAdapter(List<ChatList> chatLists, Context context, String userId) {
+    public ChatAdapter(List<ChatList> chatLists, String userId) {
         this.chatLists = chatLists;
-        this.context = context;
         this.userId = userId;
     }
 

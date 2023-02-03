@@ -82,7 +82,7 @@ public class ChatActivity extends AppCompatActivity {
 
         chatRecyclerView.setHasFixedSize(true);
         chatRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        chatAdapter = new ChatAdapter(chatLists, this, user.getUid());
+        chatAdapter = new ChatAdapter(chatLists, user.getUid());
         chatRecyclerView.setAdapter(chatAdapter);
 
         username.setText(bundle.getString("name"));
@@ -142,6 +142,12 @@ public class ChatActivity extends AppCompatActivity {
     protected void onRestart() {
         background = false;
         super.onRestart();
+    }
+
+    @Override
+    protected void onDestroy() {
+        chatRecyclerView.removeAllViews();
+        super.onDestroy();
     }
 
     private void messageListener(String groupId) {
