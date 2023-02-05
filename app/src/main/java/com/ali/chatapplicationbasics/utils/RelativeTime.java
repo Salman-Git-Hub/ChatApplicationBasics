@@ -3,6 +3,7 @@ package com.ali.chatapplicationbasics.utils;
 import android.icu.text.DateFormat;
 import android.icu.text.SimpleDateFormat;
 import android.icu.util.Calendar;
+import android.icu.util.TimeZone;
 
 import java.util.Locale;
 
@@ -27,12 +28,12 @@ public class RelativeTime {
             time *= 1000;
         }
 
-        Calendar today = Calendar.getInstance();
+        Calendar today = Calendar.getInstance(TimeZone.GMT_ZONE);
 
-        Calendar timeCal = Calendar.getInstance();
+        Calendar timeCal = Calendar.getInstance(TimeZone.GMT_ZONE);
         timeCal.setTimeInMillis(time);
 
-        long now = System.currentTimeMillis();
+        long now = Calendar.getInstance(TimeZone.GMT_ZONE).getTime().getTime();
         if (time > now || time <= 0) {
             return null;
         }

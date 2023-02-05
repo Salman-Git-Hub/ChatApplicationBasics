@@ -1,5 +1,7 @@
 package com.ali.chatapplicationbasics.chat;
 
+import android.icu.util.Calendar;
+import android.icu.util.TimeZone;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
@@ -26,7 +28,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
+import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -107,7 +111,10 @@ public class ChatActivity extends AppCompatActivity {
         List<String> seenList = new ArrayList<>();
         seenList.add(user.getUid());
         Message newMsg = new Message(user.getUid(), user.getDisplayName(), msg, seenList);
-        String millis = String.valueOf(System.currentTimeMillis());
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeZone(TimeZone.GMT_ZONE);
+        long milliseconds = calendar.getTimeInMillis();
+        String millis = String.valueOf(milliseconds);
         chatRef.child("messages")
                 .child(millis)
                 .setValue(newMsg);
@@ -173,13 +180,14 @@ public class ChatActivity extends AppCompatActivity {
                             List<String> seenUser = e.getSeenList();
                             if (!seenUser.contains(user.getUid())) {
                                 seenUser.add(user.getUid());
+                                if (!background) {
+                                    chatRef.child("messages")
+                                            .child(e.getMessageId())
+                                            .child("seenList")
+                                            .setValue(seenUser);
+                                }
                             }
-                            if (!background) {
-                                chatRef.child("messages")
-                                        .child(e.getMessageId())
-                                        .child("seenList")
-                                        .setValue(seenUser);
-                            }
+
 
                             String timeStamp = e.getMessageId();
                             String msg = e.getMessage();
