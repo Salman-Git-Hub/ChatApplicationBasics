@@ -28,9 +28,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
-import java.time.Instant;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -38,20 +36,20 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class ChatActivity extends AppCompatActivity {
 
     private final RelativeTime relativeTime = new RelativeTime();
+    private final DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReferenceFromUrl("https://chatapplicationbasics-default-rtdb.firebaseio.com/");
+    private final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+    private final List<ChatList> chatLists = new ArrayList<>();
+    private final boolean loadingFirst = true;
     private ImageView backBtn;
     private CircleImageView profilePic, sendBtn;
     private TextView username;
     private EditText msgBox;
-    private final DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReferenceFromUrl("https://chatapplicationbasics-default-rtdb.firebaseio.com/");
     private DatabaseReference chatRef;
-    private final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     private Bundle bundle;
-    private final List<ChatList> chatLists = new ArrayList<>();
     private int unseen = 0;
     private boolean background = false;
     private RecyclerView chatRecyclerView;
     private ChatAdapter chatAdapter;
-    private final boolean loadingFirst = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
