@@ -49,8 +49,11 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
         SearchList list = searchLists.get(position);
 
         holder.userName.setText(list.getUsername());
-        if (!list.getProfile().isEmpty() && list.getProfile() != null) {
-            Picasso.get().load(Uri.parse(list.getProfile())).into(holder.profile);
+        if (list.getProfile() != null) {
+            if (!list.getProfile().isEmpty())
+            {
+                Picasso.get().load(Uri.parse(list.getProfile())).into(holder.profile);
+            }
         }
         String reason;
         if (list.getFriendList() == null) {

@@ -27,6 +27,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -99,6 +100,7 @@ public class SearchActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             parseSnapshot(txt, task.getResult());
                         } else {
+                            task.getException().printStackTrace();
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
@@ -122,7 +124,7 @@ public class SearchActivity extends AppCompatActivity {
             list.add(s);
         }
         list.forEach(user -> {
-            if (user.getUsername().contains(txt)) {
+            if (user.getUsername().toLowerCase().contains(txt.toLowerCase())) {
                 searchLists.add(user);
             }
         });
