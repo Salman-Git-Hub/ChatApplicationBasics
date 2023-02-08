@@ -199,13 +199,14 @@ public class MainActivity extends AppCompatActivity {
             public void onComplete(@NonNull Task<DataSnapshot> task) {
                 if (task.isSuccessful()) {
                     mainUser = task.getResult().getValue(MainUser.class);
+                    progressIndicator.setVisibility(View.INVISIBLE);
                     if (mainUser == null) {
                         startActivity(new Intent(MainActivity.this, RegisterActivity.class)
                                 .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
                         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                     } else {
                         mainUser.setUid(task.getResult().getKey());
-                        if (!mainListenerState) {
+                        if (!mainListenerState && mAuth.getCurrentUser() == null) {
                             new Thread(() -> userGroupListener()).start();
                             mainListenerState = true;
                         }
@@ -234,10 +235,15 @@ public class MainActivity extends AppCompatActivity {
         userRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                System.out.println(snapshot.getValue() == null);
+                if (snapshot.getValue() == null) {
+                    progressIndicator.setVisibility(View.INVISIBLE);
+                    return;
+                }
                 HashMap<String, String> groupList = new HashMap<>();
                 for (DataSnapshot snap : snapshot.getChildren()) { // getting group list
                     if (snap.getKey() == null) {
-                        return;
+                        break;
                     }
                     groupList.put(snap.getKey(), "");
                     DatabaseReference g_ref = databaseReference.child("chat_groups")
@@ -245,13 +251,15 @@ public class MainActivity extends AppCompatActivity {
                     g_ref.child(mainUser.getUid()).setValue("");
                 }
                 if (groupList.isEmpty()) {
+                    progressIndicator.setVisibility(View.INVISIBLE);
                     return;
                 }
 
                 // list for new groups
                 List<String> gList = new ArrayList<>();
-
-                if (mainUser.getG_list().isEmpty()) {
+                if (mainUser.getG_list() == null) {
+                    mainUser.setG_list(groupList);
+                } else if (mainUser.getG_list().isEmpty()) {
                     mainUser.setG_list(groupList);
                     gList.addAll(groupList.keySet());
                 } else {
