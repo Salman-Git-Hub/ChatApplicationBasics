@@ -76,7 +76,8 @@ public class RegisterActivity extends AppCompatActivity {
                         String picturePath = cursor.getString(columnIndex);
                         cursor.close();
                         new Thread(() -> uploadFromFile(picturePath)).start();
-                    } catch (NullPointerException e) {
+                    } catch (Exception e) {
+                        e.printStackTrace();
                         new Thread(() -> uploadFromFile("none")).start();
                     }
                 }
@@ -130,7 +131,7 @@ public class RegisterActivity extends AppCompatActivity {
         progressIndicator.setIndeterminate(true);
         signin_text.setClickable(true);
 
-        new Thread(() -> start()).start();
+        new Thread(this::start).start();
 
     }
 
@@ -237,7 +238,6 @@ public class RegisterActivity extends AppCompatActivity {
         String txt_email = emailView.getText().toString();
         String txt_pass = passwordView.getText().toString();
         String txt_name = nameView.getText().toString().trim();
-        System.out.println(txt_name);
         if (!Patterns.EMAIL_ADDRESS.matcher(txt_email).matches()) {
             runOnUiThread(new Runnable() {
                 @Override
@@ -295,7 +295,7 @@ public class RegisterActivity extends AppCompatActivity {
                                                 FirebaseAuthUserCollisionException collisionException) {
                                             Toast.makeText(RegisterActivity.this, "Email already exists!", Toast.LENGTH_SHORT).show();
                                         } catch (Exception e) {
-                                            System.out.println(e.getMessage());
+                                            e.printStackTrace();
                                             Toast.makeText(RegisterActivity.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                                         }
                                     }
@@ -346,6 +346,7 @@ public class RegisterActivity extends AppCompatActivity {
                                                 @Override
                                                 public void run() {
                                                     if (task.isSuccessful()) {
+                                                        userRef.child("name").setValue(username);
                                                         Toast.makeText(RegisterActivity.this, "Select your profile picture", Toast.LENGTH_SHORT).show();
                                                         Intent i = new Intent(Intent.ACTION_PICK,
                                                                 android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
@@ -369,7 +370,7 @@ public class RegisterActivity extends AppCompatActivity {
                             try {
                                 throw task.getException();
                             } catch (Exception e) {
-                                System.out.println(e.getMessage());
+                                e.printStackTrace();
                                 runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
@@ -453,7 +454,7 @@ public class RegisterActivity extends AppCompatActivity {
                         Toast.makeText(RegisterActivity.this, "Error retrieving profile picture!", Toast.LENGTH_SHORT).show();
                     }
                 });
-                System.out.println(e.getMessage());
+                e.printStackTrace();
             }
         }).start();
 //        ContextCompat.getMainExecutor(this)
@@ -499,6 +500,7 @@ public class RegisterActivity extends AppCompatActivity {
                                 public void run() {
                                     registerbtn.setClickable(true);
                                     progressIndicator.setVisibility(View.INVISIBLE);
+                                    mAuth.signOut();
                                     Toast.makeText(RegisterActivity.this, "Error!", Toast.LENGTH_SHORT).show();
                                 }
                             });
