@@ -206,7 +206,7 @@ public class MainActivity extends AppCompatActivity {
                         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                     } else {
                         mainUser.setUid(task.getResult().getKey());
-                        if (!mainListenerState && mAuth.getCurrentUser() == null) {
+                        if (!mainListenerState && mAuth.getCurrentUser() != null) {
                             new Thread(() -> userGroupListener()).start();
                             mainListenerState = true;
                         }
