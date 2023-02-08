@@ -40,6 +40,7 @@ public class ChatActivity extends AppCompatActivity {
     private final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     private final List<ChatList> chatLists = new ArrayList<>();
     private final boolean loadingFirst = true;
+    private long lastMessageTime = 0L;
     private ImageView backBtn;
     private CircleImageView profilePic, sendBtn;
     private TextView username;
@@ -112,6 +113,9 @@ public class ChatActivity extends AppCompatActivity {
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeZone(TimeZone.GMT_ZONE);
         long milliseconds = calendar.getTimeInMillis();
+        if (milliseconds < lastMessageTime) {
+            milliseconds = lastMessageTime + 1L;
+        }
         String millis = String.valueOf(milliseconds);
         chatRef.child("messages")
                 .child(millis)
@@ -192,6 +196,7 @@ public class ChatActivity extends AppCompatActivity {
                             String name = e.getName();
                             String time = relativeTime.getTimeAgo(Long.parseLong(timeStamp));
                             String sender = e.getSender();
+                            lastMessageTime = Long.parseLong(timeStamp);
                             ChatList chat = new ChatList(name, msg, time, sender);
                             chatLists.add(chat);
                         }
