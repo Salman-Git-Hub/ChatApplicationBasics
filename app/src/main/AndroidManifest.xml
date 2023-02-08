@@ -44,7 +44,7 @@
         <activity
             android:name=".RegisterActivity"
             android:exported="false"
-            android:noHistory="true" />
+            android:noHistory="false" />
         <activity
             android:name=".ExtraActivity"
             android:exported="false"
