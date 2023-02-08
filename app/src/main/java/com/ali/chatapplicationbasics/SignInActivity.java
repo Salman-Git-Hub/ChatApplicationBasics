@@ -181,26 +181,6 @@ public class SignInActivity extends AppCompatActivity {
                                     }
                                 });
 
-                            } catch (FirebaseAuthInvalidUserException userException) {
-                                runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        progressIndicator.setVisibility(View.INVISIBLE);
-                                        Toast.makeText(SignInActivity.this, "User isn't available!", Toast.LENGTH_SHORT).show();
-                                        SharedPreferences prefs = SignInActivity.this.getSharedPreferences("shared_pref_log",
-                                                MODE_PRIVATE);
-                                        SharedPreferences.Editor editor = prefs.edit();
-                                        editor.clear();
-                                        editor.apply();
-                                        mAuth.signOut();
-                                        startActivity(new Intent(SignInActivity.this, SignInActivity.class)
-                                                .putExtra("re_authenticate", false)
-                                                .putExtra("pass_to_extra", false)
-                                                .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
-
-                                        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-                                    }
-                                });
                             } catch (Exception e) {
                                 System.out.println(e.getMessage());
                                 runOnUiThread(new Runnable() {
@@ -219,6 +199,7 @@ public class SignInActivity extends AppCompatActivity {
                                     progressIndicator.setVisibility(View.GONE);
                                     startActivity(new Intent(SignInActivity.this, RegisterActivity.class)
                                             .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+                                    new Thread(SignInActivity.this::deleteData).start();
                                 }
                             });
                         }
@@ -227,8 +208,6 @@ public class SignInActivity extends AppCompatActivity {
     }
 
     private void deleteData() {
-        final boolean[] finished1 = {false};
-        final boolean[] finished2 = {false};
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -249,7 +228,6 @@ public class SignInActivity extends AppCompatActivity {
                                 }
                             });
                         }
-                        finished2[0] = true;
                     }
                 });
         databaseReference.child("users").child(uid)
@@ -264,13 +242,8 @@ public class SignInActivity extends AppCompatActivity {
                                 }
                             });
                         }
-                        finished1[0] = true;
                     }
                 });
-        while (!finished1[0] || !finished2[0]) {
-            continue;
-        }
-        new Thread(this::deleteAccount).start();
     }
 
     private void emailSignIn() {
@@ -303,6 +276,7 @@ public class SignInActivity extends AppCompatActivity {
                                     public void run() {
                                         Toast.makeText(SignInActivity.this, "Authentication successful!", Toast.LENGTH_SHORT).show();
                                         if (delete_need) {
+                                            new Thread(SignInActivity.this::deleteAccount).start();
                                             new Thread(SignInActivity.this::deleteData).start();
                                             return;
                                         }
