@@ -49,7 +49,6 @@ import java.util.ArrayList;
 
 public class RegisterActivity extends AppCompatActivity {
 
-    private final boolean enabled = false;
     LinearProgressIndicator progressIndicator;
     DatabaseReference databaseReference;
     private SignInButton googleBtn;
@@ -147,6 +146,7 @@ public class RegisterActivity extends AppCompatActivity {
             startActivity(new Intent(RegisterActivity.this, MainActivity.class)
                     .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
             overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+            finish();
 
         }
         signin_text.setOnClickListener(new View.OnClickListener() {
@@ -471,6 +471,7 @@ public class RegisterActivity extends AppCompatActivity {
                     startActivity(new Intent(RegisterActivity.this, MainActivity.class)
                             .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
                     overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                    finish();
                 }
             });
             return;
@@ -491,6 +492,7 @@ public class RegisterActivity extends AppCompatActivity {
                                     startActivity(new Intent(RegisterActivity.this, MainActivity.class)
                                             .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
                                     overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                                    finish();
                                 }
                             });
 
